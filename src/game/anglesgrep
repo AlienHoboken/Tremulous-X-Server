@@ -1,0 +1,517 @@
+bg_misc.c:  VectorCopy( ps->viewangles, s->apos.trBase );
+bg_misc.c:  //s->angles2[YAW] = ps->movementDir;
+bg_misc.c:  VectorCopy( ps->grapplePoint, s->angles2 );
+bg_misc.c:  VectorCopy( ps->viewangles, s->apos.trBase );
+bg_misc.c:  //s->angles2[YAW] = ps->movementDir;
+bg_misc.c:  VectorCopy( ps->grapplePoint, s->angles2 );
+bg_misc.c:  vec3_t  angles, playerOrigin, playerNormal;
+bg_misc.c:  VectorCopy( ps->viewangles, angles );
+bg_misc.c:  AngleVectors( angles, forward, NULL, NULL );
+bg_misc.c:  vectoangles( forward, outAngles );
+bgmss:  VectorCopy( ps->viewangles, s->apos.trBase );
+bgmss:  //s->angles2[YAW] = ps->movementDir;
+bgmss:  VectorCopy( ps->grapplePoint, s->angles2 );
+bgmss:  VectorCopy( ps->viewangles, s->apos.trBase );
+bgmss:  //s->angles2[YAW] = ps->movementDir;
+bgmss:  VectorCopy( ps->grapplePoint, s->angles2 );
+bgmss:  vec3_t  angles, playerOrigin, playerNormal;
+bgmss:  VectorCopy( ps->viewangles, angles );
+bgmss:  AngleVectors( angles, forward, NULL, NULL );
+bgmss:  vectoangles( forward, outAngles );
+bg_pmove.c:        //trace "underneath" BBOX so we can traverse angles > 180deg
+bg_pmove.c:          pm->ps->delta_angles[ YAW ] -= rTtANGrTsTt;
+bg_pmove.c:          pm->ps->delta_angles[ PITCH ] -= ANGLE2SHORT( traceANGsurf );
+bg_pmove.c:          vectoangles( trace.plane.normal, toAngles );
+bg_pmove.c:          vectoangles( pm->ps->grapplePoint, surfAngles );
+bg_pmove.c:          pm->ps->delta_angles[ 1 ] -= ANGLE2SHORT( ( ( surfAngles[ 1 ] - toAngles[ 1 ] ) * 2 ) - 180.0f );
+bg_pmove.c:      vec3_t  forward, rotated, angles;
+bg_pmove.c:      AngleVectors( pm->ps->viewangles, forward, NULL, NULL );
+bg_pmove.c:      vectoangles( rotated, angles );
+bg_pmove.c:      pm->ps->delta_angles[ YAW ] -= ANGLE2SHORT( angles[ YAW ] - pm->ps->viewangles[ YAW ] );
+bg_pmove.c:      vec3_t  forward, rotated, angles;
+bg_pmove.c:      AngleVectors( pm->ps->viewangles, forward, NULL, NULL );
+bg_pmove.c:      vectoangles( rotated, angles );
+bg_pmove.c:      pm->ps->delta_angles[ YAW ] -= ANGLE2SHORT( angles[ YAW ] - pm->ps->viewangles[ YAW ] );
+bg_pmove.c:  //FIXME: predicted angles miss a problem??
+bg_pmove.c:      pm->ps->delta_angles[ PITCH ] -= ANGLE2SHORT( ( ( random() * 0.5 ) - 0.125 ) * ( 30 / (float)addTime ) );
+bg_pmove.c:      pm->ps->delta_angles[ YAW ] -= ANGLE2SHORT( ( ( random() * 0.5 ) - 0.25 ) * ( 30.0 / (float)addTime ) );
+bg_pmove.c:      pm->ps->delta_angles[ PITCH ] -= ANGLE2SHORT( ( ( random() * 8 ) - 2 ) * ( 30.0 / (float)addTime ) );
+bg_pmove.c:      pm->ps->delta_angles[ YAW ] -= ANGLE2SHORT( ( ( random() * 8 ) - 4 ) * ( 30.0 / (float)addTime ) );
+bg_pmove.c:This can be used as another entry point when only the viewangles
+bg_pmove.c:  // circularly clamp the angles with deltas
+bg_pmove.c:    temp[ i ] = cmd->angles[ i ] + ps->delta_angles[ i ];
+bg_pmove.c:        ps->delta_angles[ i ] = 16000 - cmd->angles[ i ];
+bg_pmove.c:        ps->delta_angles[ i ] = -16000 - cmd->angles[ i ];
+bg_pmove.c:  //convert viewangles -> axis
+bg_pmove.c:  //convert the new axis back to angles
+bg_pmove.c:  //force angles to -180 <= x <= 180
+bg_pmove.c:  //actually set the viewangles
+bg_pmove.c:    ps->viewangles[ i ] = tempang[ i ];
+bg_pmove.c:    vec3_t  dir, angles;
+bg_pmove.c:    vectoangles( dir, angles );
+bg_pmove.c:      float diff = AngleSubtract( ps->viewangles[ i ], angles[ i ] );
+bg_pmove.c:        ps->delta_angles[ i ] += ANGLE2SHORT( fabs( diff ) - 90.0f );
+bg_pmove.c:        ps->delta_angles[ i ] -= ANGLE2SHORT( fabs( diff ) - 90.0f );
+bg_pmove.c:        ps->delta_angles[ i ] += ANGLE2SHORT( fabs( diff ) * 0.05f );
+bg_pmove.c:        ps->delta_angles[ i ] -= ANGLE2SHORT( fabs( diff ) * 0.05f );
+bg_pmove.c:  AngleVectors( pm->ps->viewangles, pml.forward, pml.right, pml.up );
+bg_pmove.c:    // update the viewangles
+bg_pmove.c:  // update the viewangles
+bg_pmove.c:  // update the viewangles
+bgpubdiff:< 	MOD_BG_TURRET_ANGLE,      // Allow high turret build angles
+bgpubdiff:>   MOD_BG_TURRET_ANGLE,      // Allow high turret build angles
+bg_public.h:// if a full pmove isn't done on the client, you can just update the angles
+bg_public.h:	MOD_BG_TURRET_ANGLE,      // Allow high turret build angles
+difffff:<     SetClientViewAngle( player, angles );
+difffff:>     G_SetClientViewAngle( player, angles );
+difffff:<       if( APropHovel_Blocked( angles, origin, normal, ent ) )
+difffff:>       if( APropHovel_Blocked( origin, angles, normal, ent ) )
+difffff:< gentity_t *G_InstantBuild( buildable_t buildable, vec3_t origin, vec3_t angles, vec3_t origin2, vec3_t 
+difffff:< angles2 )
+difffff:> gentity_t *G_InstantBuild( buildable_t buildable, vec3_t origin, vec3_t angles, vec3_t origin2, vec3_t angles2 )
+g_active.c:  vec3_t    angles;
+g_active.c:    vectoangles( client->damage_from, angles );
+g_active.c:    client->ps.damagePitch = angles[ PITCH ] / 360.0 * 256;
+g_active.c:    client->ps.damageYaw = angles[ YAW ] / 360.0 * 256;
+g_active.c:      AngleVectors( client->ps.viewangles, view, NULL, NULL );
+g_active.c:  vec3_t   spawn_origin, spawn_angles;
+g_active.c:        G_SelectAlienLockSpawnPoint( spawn_origin, spawn_angles );
+g_active.c:        G_SelectHumanLockSpawnPoint( spawn_origin, spawn_angles );
+g_active.c:          G_SetClientViewAngle( ent, spawn_angles );
+g_buildablebackup:  VectorCopy( self->s.angles, new->angles );
+g_buildablebackup:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildablebackup:  VectorCopy( self->s.angles, new->angles );
+g_buildablebackup:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildablebackup:        vectoangles( dirToTarget, self->turretAim );
+g_buildablebackup:  vec3_t    forward, normal, origin, start, end, angles, hovelMaxs;
+g_buildablebackup:  AngleVectors( hovel->s.angles, forward, NULL, NULL );
+g_buildablebackup:  vectoangles( forward, angles );
+g_buildablebackup:    G_SetClientViewAngle( player, angles );
+g_buildablebackup:static qboolean APropHovel_Blocked( vec3_t origin, vec3_t angles, vec3_t normal,
+g_buildablebackup:  VectorCopy( angles, hovel.s.angles );
+g_buildablebackup:      vectoangles( inverseNormal, hovelAngles );
+g_buildablebackup:  VectorCopy( self->s.angles, new->angles );
+g_buildablebackup:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildablebackup:    VectorCopy( self->s.angles, newAngles );
+g_buildablebackup:  vectoangles( dirToTarget, self->turretAim );
+g_buildablebackup:  vectoangles( dttAdjusted, angleToTarget );
+g_buildablebackup:  angularDiff[ PITCH ] = AngleSubtract( self->s.angles2[ PITCH ], angleToTarget[ PITCH ] );
+g_buildablebackup:  angularDiff[ YAW ] = AngleSubtract( self->s.angles2[ YAW ], angleToTarget[ YAW ] );
+g_buildablebackup:    self->s.angles2[ PITCH ] += angularSpeed;
+g_buildablebackup:    self->s.angles2[ PITCH ] -= angularSpeed;
+g_buildablebackup:    self->s.angles2[ PITCH ] = angleToTarget[ PITCH ];
+g_buildablebackup:  temp = fabs( self->s.angles2[ PITCH ] );
+g_buildablebackup:    self->s.angles2[ PITCH ] = (-360) + MGTURRET_VERTICALCAP;
+g_buildablebackup:    self->s.angles2[ YAW ] += angularSpeed;
+g_buildablebackup:    self->s.angles2[ YAW ] -= angularSpeed;
+g_buildablebackup:    self->s.angles2[ YAW ] = angleToTarget[ YAW ];
+g_buildablebackup:  AngleVectors( self->s.angles2, dttAdjusted, NULL, NULL );
+g_buildablebackup:  vectoangles( dirToTarget, self->turretAim );
+g_buildablebackup:  if( abs( angleToTarget[ YAW ] - self->s.angles2[ YAW ] ) <= accuracyTolerance &&
+g_buildablebackup:      abs( angleToTarget[ PITCH ] - self->s.angles2[ PITCH ] ) <= accuracyTolerance )
+g_buildablebackup:        vectoangles( dir, self->turretAim );
+g_buildablebackup:  VectorCopy( self->s.angles, new->angles );
+g_buildablebackup:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildablebackup:    VectorCopy( ent->s.angles, new->angles );
+g_buildablebackup:    VectorCopy( ent->s.angles2, new->angles2 );
+g_buildablebackup:  vec3_t            angles;
+g_buildablebackup:  BG_PositionBuildableRelativeToPlayer( ps, mins, maxs, trap_Trace, entity_origin, angles, &tr1 );
+g_buildablebackup:      if( APropHovel_Blocked( origin, angles, normal, ent ) )
+g_buildablebackup:static gentity_t *G_Build( gentity_t *builder, buildable_t buildable, vec3_t origin, vec3_t angles )
+g_buildablebackup:  // set turret angles
+g_buildablebackup:  VectorCopy( builder->s.angles2, built->s.angles2 );
+g_buildablebackup:  VectorCopy( angles, built->s.angles );
+g_buildablebackup:  built->s.angles[ PITCH ] = 0.0f;
+g_buildablebackup:  built->s.angles2[ YAW ] = angles[ YAW ];
+g_buildablebackup:    VectorCopy( built->s.angles, new->angles );
+g_buildablebackup:    VectorCopy( built->s.angles2, new->angles2 );
+g_buildablebackup:  built = G_Build( ent, buildable, ent->s.pos.trBase, ent->s.angles );
+g_buildablebackup:      ent->s.angles[ 0 ],
+g_buildablebackup:      ent->s.angles[ 1 ],
+g_buildablebackup:      ent->s.angles[ 2 ],
+g_buildablebackup:      ent->s.angles2[ 0 ],
+g_buildablebackup:      ent->s.angles2[ 1 ],
+g_buildablebackup:      ent->s.angles2[ 2 ] );
+g_buildablebackup:  vec3_t angles, vec3_t origin2, vec3_t angles2 )
+g_buildablebackup:  VectorCopy( angles, builder->s.angles );
+g_buildablebackup:  VectorCopy( angles2, builder->s.angles2 );
+g_buildablebackup:gentity_t *G_InstantBuild( buildable_t buildable, vec3_t origin, vec3_t angles, vec3_t origin2, vec3_t angles2 )
+g_buildablebackup:  VectorCopy( angles, builder->s.angles );
+g_buildablebackup:  VectorCopy( angles2, builder->s.angles2 );
+g_buildablebackup:  built = G_Build( builder, buildable, builder->s.pos.trBase, builder->s.angles );
+g_buildablebackup:  built = G_InstantBuild( bh->buildable, bh->origin, bh->angles, bh->origin2, bh->angles2 );
+g_buildablebackup:  vec3_t angles = { 0.0f, 0.0f, 0.0f };
+g_buildablebackup:  vec3_t angles2 = { 0.0f, 0.0f, 0.0f };
+g_buildablebackup:        &angles[ 0 ], &angles[ 1 ], &angles[ 2 ],
+g_buildablebackup:        &angles2[ 0 ], &angles2[ 1 ], &angles2[ 2 ] );
+g_buildablebackup:        G_LayoutBuildItem( buildable, origin, angles, origin2, angles2 );
+g_buildable.c:  VectorCopy( self->s.angles, new->angles );
+g_buildable.c:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildable.c:  VectorCopy( self->s.angles, new->angles );
+g_buildable.c:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildable.c:        vectoangles( dirToTarget, self->turretAim );
+g_buildable.c:  vec3_t    forward, normal, origin, start, end, angles, hovelMaxs;
+g_buildable.c:  AngleVectors( hovel->s.angles, forward, NULL, NULL );
+g_buildable.c:  vectoangles( forward, angles );
+g_buildable.c:    G_SetClientViewAngle( player, angles );
+g_buildable.c:static qboolean APropHovel_Blocked( vec3_t origin, vec3_t angles, vec3_t normal,
+g_buildable.c:  VectorCopy( angles, hovel.s.angles );
+g_buildable.c:      vectoangles( inverseNormal, hovelAngles );
+g_buildable.c:  VectorCopy( self->s.angles, new->angles );
+g_buildable.c:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildable.c:    VectorCopy( self->s.angles, newAngles );
+g_buildable.c:  vectoangles( dirToTarget, self->turretAim );
+g_buildable.c:  vectoangles( dttAdjusted, angleToTarget );
+g_buildable.c:  angularDiff[ PITCH ] = AngleSubtract( self->s.angles2[ PITCH ], angleToTarget[ PITCH ] );
+g_buildable.c:  angularDiff[ YAW ] = AngleSubtract( self->s.angles2[ YAW ], angleToTarget[ YAW ] );
+g_buildable.c:    self->s.angles2[ PITCH ] += angularSpeed;
+g_buildable.c:    self->s.angles2[ PITCH ] -= angularSpeed;
+g_buildable.c:    self->s.angles2[ PITCH ] = angleToTarget[ PITCH ];
+g_buildable.c:  temp = fabs( self->s.angles2[ PITCH ] );
+g_buildable.c:    self->s.angles2[ PITCH ] = (-360) + MGTURRET_VERTICALCAP;
+g_buildable.c:    self->s.angles2[ YAW ] += angularSpeed;
+g_buildable.c:    self->s.angles2[ YAW ] -= angularSpeed;
+g_buildable.c:    self->s.angles2[ YAW ] = angleToTarget[ YAW ];
+g_buildable.c:  AngleVectors( self->s.angles2, dttAdjusted, NULL, NULL );
+g_buildable.c:  vectoangles( dirToTarget, self->turretAim );
+g_buildable.c:  if( abs( angleToTarget[ YAW ] - self->s.angles2[ YAW ] ) <= accuracyTolerance &&
+g_buildable.c:      abs( angleToTarget[ PITCH ] - self->s.angles2[ PITCH ] ) <= accuracyTolerance )
+g_buildable.c:        vectoangles( dir, self->turretAim );
+g_buildable.c:  VectorCopy( self->s.angles, new->angles );
+g_buildable.c:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildable.c:    VectorCopy( ent->s.angles, new->angles );
+g_buildable.c:    VectorCopy( ent->s.angles2, new->angles2 );
+g_buildable.c:  vec3_t            angles;
+g_buildable.c:  BG_PositionBuildableRelativeToPlayer( ps, mins, maxs, trap_Trace, entity_origin, angles, &tr1 );
+g_buildable.c:      if( APropHovel_Blocked( origin, angles, normal, ent ) )
+g_buildable.c:static gentity_t *G_Build( gentity_t *builder, buildable_t buildable, vec3_t origin, vec3_t angles )
+g_buildable.c:  // set turret angles
+g_buildable.c:  VectorCopy( builder->s.angles2, built->s.angles2 );
+g_buildable.c:  VectorCopy( angles, built->s.angles );
+g_buildable.c:  built->s.angles[ PITCH ] = 0.0f;
+g_buildable.c:  built->s.angles2[ YAW ] = angles[ YAW ];
+g_buildable.c:    VectorCopy( built->s.angles, new->angles );
+g_buildable.c:    VectorCopy( built->s.angles2, new->angles2 );
+g_buildable.c:  built = G_Build( ent, buildable, ent->s.pos.trBase, ent->s.angles );
+g_buildable.c:      ent->s.angles[ 0 ],
+g_buildable.c:      ent->s.angles[ 1 ],
+g_buildable.c:      ent->s.angles[ 2 ],
+g_buildable.c:      ent->s.angles2[ 0 ],
+g_buildable.c:      ent->s.angles2[ 1 ],
+g_buildable.c:      ent->s.angles2[ 2 ] );
+g_buildable.c:  vec3_t angles, vec3_t origin2, vec3_t angles2 )
+g_buildable.c:  VectorCopy( angles, builder->s.angles );
+g_buildable.c:  VectorCopy( angles2, builder->s.angles2 );
+g_buildable.c:gentity_t *G_InstantBuild( buildable_t buildable, vec3_t origin, vec3_t angles, vec3_t origin2, vec3_t angles2 )
+g_buildable.c:  VectorCopy( angles, builder->s.angles );
+g_buildable.c:  VectorCopy( angles2, builder->s.angles2 );
+g_buildable.c:  built = G_Build( builder, buildable, builder->s.pos.trBase, builder->s.angles );
+g_buildable.c:  built = G_InstantBuild( bh->buildable, bh->origin, bh->angles, bh->origin2, bh->angles2 );
+g_buildable.c:  vec3_t angles = { 0.0f, 0.0f, 0.0f };
+g_buildable.c:  vec3_t angles2 = { 0.0f, 0.0f, 0.0f };
+g_buildable.c:        &angles[ 0 ], &angles[ 1 ], &angles[ 2 ],
+g_buildable.c:        &angles2[ 0 ], &angles2[ 1 ], &angles2[ 2 ] );
+g_buildable.c:        G_LayoutBuildItem( buildable, origin, angles, origin2, angles2 );
+g_buildablepathcingetc:  VectorCopy( self->s.angles, new->angles );
+g_buildablepathcingetc:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildablepathcingetc:  VectorCopy( self->s.angles, new->angles );
+g_buildablepathcingetc:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildablepathcingetc:        vectoangles( dirToTarget, self->turretAim );
+g_buildablepathcingetc:  vec3_t    forward, normal, origin, start, end, angles, hovelMaxs;
+g_buildablepathcingetc:  AngleVectors( hovel->s.angles, forward, NULL, NULL );
+g_buildablepathcingetc:  vectoangles( forward, angles );
+g_buildablepathcingetc:    G_SetClientViewAngle( player, angles );
+g_buildablepathcingetc:static qboolean APropHovel_Blocked( vec3_t origin, vec3_t angles, vec3_t normal,
+g_buildablepathcingetc:  VectorCopy( angles, hovel.s.angles );
+g_buildablepathcingetc:      vectoangles( inverseNormal, hovelAngles );
+g_buildablepathcingetc:  VectorCopy( self->s.angles, new->angles );
+g_buildablepathcingetc:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildablepathcingetc:    VectorCopy( self->s.angles, newAngles );
+g_buildablepathcingetc:  vectoangles( dirToTarget, self->turretAim );
+g_buildablepathcingetc:  vectoangles( dttAdjusted, angleToTarget );
+g_buildablepathcingetc:  angularDiff[ PITCH ] = AngleSubtract( self->s.angles2[ PITCH ], angleToTarget[ PITCH ] );
+g_buildablepathcingetc:  angularDiff[ YAW ] = AngleSubtract( self->s.angles2[ YAW ], angleToTarget[ YAW ] );
+g_buildablepathcingetc:    self->s.angles2[ PITCH ] += angularSpeed;
+g_buildablepathcingetc:    self->s.angles2[ PITCH ] -= angularSpeed;
+g_buildablepathcingetc:    self->s.angles2[ PITCH ] = angleToTarget[ PITCH ];
+g_buildablepathcingetc:  temp = fabs( self->s.angles2[ PITCH ] );
+g_buildablepathcingetc:    self->s.angles2[ PITCH ] = (-360) + MGTURRET_VERTICALCAP;
+g_buildablepathcingetc:    self->s.angles2[ YAW ] += angularSpeed;
+g_buildablepathcingetc:    self->s.angles2[ YAW ] -= angularSpeed;
+g_buildablepathcingetc:    self->s.angles2[ YAW ] = angleToTarget[ YAW ];
+g_buildablepathcingetc:  AngleVectors( self->s.angles2, dttAdjusted, NULL, NULL );
+g_buildablepathcingetc:  vectoangles( dirToTarget, self->turretAim );
+g_buildablepathcingetc:  if( abs( angleToTarget[ YAW ] - self->s.angles2[ YAW ] ) <= accuracyTolerance &&
+g_buildablepathcingetc:      abs( angleToTarget[ PITCH ] - self->s.angles2[ PITCH ] ) <= accuracyTolerance )
+g_buildablepathcingetc:        vectoangles( dir, self->turretAim );
+g_buildablepathcingetc:  VectorCopy( self->s.angles, new->angles );
+g_buildablepathcingetc:  VectorCopy( self->s.angles2, new->angles2 );
+g_buildablepathcingetc:    VectorCopy( ent->s.angles, new->angles );
+g_buildablepathcingetc:    VectorCopy( ent->s.angles2, new->angles2 );
+g_buildablepathcingetc:  vec3_t            angles;
+g_buildablepathcingetc:  BG_PositionBuildableRelativeToPlayer( ps, mins, maxs, trap_Trace, entity_origin, angles, &tr1 );
+g_buildablepathcingetc:      if( APropHovel_Blocked( origin, angles, normal, ent ) )
+g_buildablepathcingetc:static gentity_t *G_Build( gentity_t *builder, buildable_t buildable, vec3_t origin, vec3_t angles )
+g_buildablepathcingetc:  // set turret angles
+g_buildablepathcingetc:  VectorCopy( builder->s.angles2, built->s.angles2 );
+g_buildablepathcingetc:  VectorCopy( angles, built->s.angles );
+g_buildablepathcingetc:  built->s.angles[ PITCH ] = 0.0f;
+g_buildablepathcingetc:  built->s.angles2[ YAW ] = angles[ YAW ];
+g_buildablepathcingetc:    VectorCopy( built->s.angles, new->angles );
+g_buildablepathcingetc:    VectorCopy( built->s.angles2, new->angles2 );
+g_buildablepathcingetc:  built = G_Build( ent, buildable, ent->s.pos.trBase, ent->s.angles );
+g_buildablepathcingetc:      ent->s.angles[ 0 ],
+g_buildablepathcingetc:      ent->s.angles[ 1 ],
+g_buildablepathcingetc:      ent->s.angles[ 2 ],
+g_buildablepathcingetc:      ent->s.angles2[ 0 ],
+g_buildablepathcingetc:      ent->s.angles2[ 1 ],
+g_buildablepathcingetc:      ent->s.angles2[ 2 ] );
+g_buildablepathcingetc:  vec3_t angles, vec3_t origin2, vec3_t angles2 )
+g_buildablepathcingetc:  VectorCopy( angles, builder->s.angles );
+g_buildablepathcingetc:  VectorCopy( angles2, builder->s.angles2 );
+g_buildablepathcingetc:gentity_t *G_InstantBuild( buildable_t buildable, vec3_t origin, vec3_t angles, vec3_t origin2, vec3_t angles2 )
+g_buildablepathcingetc:  VectorCopy( angles, builder->s.angles );
+g_buildablepathcingetc:  VectorCopy( angles2, builder->s.angles2 );
+g_buildablepathcingetc:  built = G_Build( builder, buildable, builder->s.pos.trBase, builder->s.angles );
+g_buildablepathcingetc:  built = G_InstantBuild( bh->buildable, bh->origin, bh->angles, bh->origin2, bh->angles2 );
+g_buildablepathcingetc:  vec3_t angles = { 0.0f, 0.0f, 0.0f };
+g_buildablepathcingetc:  vec3_t angles2 = { 0.0f, 0.0f, 0.0f };
+g_buildablepathcingetc:        &angles[ 0 ], &angles[ 1 ], &angles[ 2 ],
+g_buildablepathcingetc:        &angles2[ 0 ], &angles2[ 1 ], &angles2[ 2 ] );
+g_buildablepathcingetc:        G_LayoutBuildItem( buildable, origin, angles, origin2, angles2 );
+g_client.c:gentity_t *G_SelectRandomFurthestSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles )
+g_client.c:    VectorCopy( spot->s.angles, angles );
+g_client.c:  VectorCopy( list_spot[ rnd ]->s.angles, angles );
+g_client.c:gentity_t *G_SelectSpawnPoint( vec3_t avoidPoint, vec3_t origin, vec3_t angles )
+g_client.c:  return G_SelectRandomFurthestSpawnPoint( avoidPoint, origin, angles );
+g_client.c:gentity_t *G_SelectTremulousSpawnPoint( pTeam_t team, vec3_t preference, vec3_t origin, vec3_t angles )
+g_client.c:  VectorCopy( spot->s.angles, angles );
+g_client.c:  angles[ ROLL ] = 0;
+g_client.c:gentity_t *G_SelectInitialSpawnPoint( vec3_t origin, vec3_t angles )
+g_client.c:    return G_SelectSpawnPoint( vec3_origin, origin, angles );
+g_client.c:  VectorCopy( spot->s.angles, angles );
+g_client.c:gentity_t *G_SelectSpectatorSpawnPoint( vec3_t origin, vec3_t angles )
+g_client.c:  VectorCopy( level.intermission_angle, angles );
+g_client.c:gentity_t *G_SelectAlienLockSpawnPoint( vec3_t origin, vec3_t angles )
+g_client.c:    return G_SelectSpectatorSpawnPoint( origin, angles );
+g_client.c:  VectorCopy( spot->s.angles, angles );
+g_client.c:gentity_t *G_SelectHumanLockSpawnPoint( vec3_t origin, vec3_t angles )
+g_client.c:    return G_SelectSpectatorSpawnPoint( origin, angles );
+g_client.c:  VectorCopy( spot->s.angles, angles );
+g_client.c:  VectorCopy( ent->s.apos.trBase, body->s.angles );
+g_client.c:    ent->client->ps.delta_angles[ i ] = cmdAngle - ent->client->pers.cmd.angles[ i ];
+g_client.c:  VectorCopy( angle, ent->s.angles );
+g_client.c:  VectorCopy( ent->s.angles, ent->client->ps.viewangles );
+g_client.c:void ClientSpawn( gentity_t *ent, gentity_t *spawn, vec3_t origin, vec3_t angles )
+g_client.c:  vec3_t              spawn_origin, spawn_angles;
+g_client.c:  if( angles != NULL )
+g_client.c:    VectorCopy( angles, spawn_angles );
+g_client.c:      spawnPoint = G_SelectSpectatorSpawnPoint( spawn_origin, spawn_angles );
+g_client.c:      spawnPoint = G_SelectAlienLockSpawnPoint( spawn_origin, spawn_angles );
+g_client.c:      spawnPoint = G_SelectHumanLockSpawnPoint( spawn_origin, spawn_angles );
+g_client.c:      spawn_angles[ YAW ] += 180.0f;
+g_client.c:      AngleNormalize360( spawn_angles[ YAW ] );
+g_client.c:        AngleVectors( spawn_angles, forward, NULL, NULL );
+g_client.c:    spawn_angles[ YAW ] += 180.0f;
+g_client.c:    AngleNormalize360( spawn_angles[ YAW ] );
+g_client.c:  G_SetClientViewAngle( ent, spawn_angles );
+g_cmds.c:  vec3_t  origin, angles;
+g_cmds.c:  VectorClear( angles );
+g_cmds.c:  angles[ YAW ] = atof( buffer );
+g_cmds.c:  TeleportPlayer( ent, origin, angles );
+g_cmds.c:    AngleVectors( ent->client->ps.viewangles, forward, NULL, NULL );
+g_cmds.c:            VectorCopy( traceEnt->s.angles, new->angles );
+g_cmds.c:            VectorCopy( traceEnt->s.angles2, new->angles2 );
+g_cmds.c:  AngleVectors( ent->client->ps.viewangles, forward, NULL, NULL );
+g_cmds.c:    vec3_t   spawn_origin, spawn_angles;
+g_cmds.c:      G_SelectAlienLockSpawnPoint( spawn_origin, spawn_angles );
+g_cmds.c:      G_SelectHumanLockSpawnPoint( spawn_origin, spawn_angles );
+g_cmds.c:    G_SetClientViewAngle( ent, spawn_angles );
+g_cmds.c:  ent->client->ps.viewangles[ PITCH ] = 0.0f;
+g_cmds.c:     AngleVectors( ent->client->ps.viewangles, forward, NULL, NULL );
+g_cmds.c:   AngleVectors( ent->client->ps.viewangles, forward, right, up );
+g_cmds.c.save:  vec3_t  origin, angles;
+g_cmds.c.save:  VectorClear( angles );
+g_cmds.c.save:  angles[ YAW ] = atof( buffer );
+g_cmds.c.save:  TeleportPlayer( ent, origin, angles );
+g_cmds.c.save:    AngleVectors( ent->client->ps.viewangles, forward, NULL, NULL );
+g_cmds.c.save:            VectorCopy( traceEnt->s.angles, new->angles );
+g_cmds.c.save:            VectorCopy( traceEnt->s.angles2, new->angles2 );
+g_cmds.c.save:  AngleVectors( ent->client->ps.viewangles, forward, NULL, NULL );
+g_cmds.c.save:    vec3_t   spawn_origin, spawn_angles;
+g_cmds.c.save:      G_SelectAlienLockSpawnPoint( spawn_origin, spawn_angles );
+g_cmds.c.save:      G_SelectHumanLockSpawnPoint( spawn_origin, spawn_angles );
+g_cmds.c.save:    G_SetClientViewAngle( ent, spawn_angles );
+g_cmds.c.save:  ent->client->ps.viewangles[ PITCH ] = 0.0f;
+g_cmds.c.save:     AngleVectors( ent->client->ps.viewangles, forward, NULL, NULL );
+g_cmds.c.save:   AngleVectors( ent->client->ps.viewangles, forward, right, up );
+g_combat.c:    self->client->ps.stats[ STAT_VIEWLOCK ] = self->s.angles[ YAW ];
+g_combat.c:  self->s.angles[ PITCH ] = 0;
+g_combat.c:  self->s.angles[ ROLL ] = 0;
+g_combat.c:  self->s.angles[ YAW ] = self->s.apos.trBase[ YAW ];
+g_combat.c:  VectorCopy( self->s.angles, self->client->ps.viewangles );
+g_combat.c:  vectoangles( bulletPath, bulletAngle );
+g_combat.c:  clientRotation = targ->client->ps.viewangles[ YAW ];
+g_combat.c:  DAMAGE_NO_KNOCKBACK   do not affect velocity, just view angles
+g_local.h:  usercmd_t           cmd;                // we would lose angles if not persistant
+g_local.h:  vec3_t angles; // which way round
+g_local.h:  vec3_t angles2; // them so I will do the same
+g_local.h:gentity_t         *G_InstantBuild( buildable_t buildable, vec3_t origin, vec3_t angles, vec3_t origin2, vec3_t angles2 );
+g_local.h:void        G_SetMovedir ( vec3_t angles, vec3_t movedir);
+g_local.h:#define DAMAGE_NO_KNOCKBACK   0x00000004  // do not affect velocity, just view angles
+g_local.h:void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles );
+g_local.h:gentity_t *G_SelectTremulousSpawnPoint( pTeam_t team, vec3_t preference, vec3_t origin, vec3_t angles );
+g_local.h:gentity_t *G_SelectSpawnPoint( vec3_t avoidPoint, vec3_t origin, vec3_t angles );
+g_local.h:gentity_t *G_SelectAlienLockSpawnPoint( vec3_t origin, vec3_t angles );
+g_local.h:gentity_t *G_SelectHumanLockSpawnPoint( vec3_t origin, vec3_t angles );
+g_local.h:void      ClientSpawn( gentity_t *ent, gentity_t *spawn, vec3_t origin, vec3_t angles );
+g_local.h:extern  vmCvar_t  g_modTurretAngle;      // Allow high turret build angles
+g_mainbackup:  vec3_t        spawn_origin, spawn_angles;
+g_mainbackup:            spawn_origin, spawn_angles ) ) )
+g_mainbackup:      ClientSpawn( ent, spawn, spawn_origin, spawn_angles );
+g_mainbackup:  VectorCopy( level.intermission_angle, ent->client->ps.viewangles );
+g_mainbackup:    VectorCopy( ent->s.angles, level.intermission_angle );
+g_mainbackup:        vectoangles( dir, level.intermission_angle );
+g_main.c:  vec3_t        spawn_origin, spawn_angles;
+g_main.c:            spawn_origin, spawn_angles ) ) )
+g_main.c:      ClientSpawn( ent, spawn, spawn_origin, spawn_angles );
+g_main.c:  VectorCopy( level.intermission_angle, ent->client->ps.viewangles );
+g_main.c:    VectorCopy( ent->s.angles, level.intermission_angle );
+g_main.c:        vectoangles( dir, level.intermission_angle );
+g_misc.c:void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles )
+g_misc.c:  AngleVectors( angles, player->client->ps.velocity, NULL, NULL );
+g_misc.c:  // set angles
+g_misc.c:  G_SetClientViewAngle( player, angles );
+g_misc.c:  VectorCopy( ent->s.angles, ent->s.apos.trBase );
+g_misc.c:    G_SetMovedir( owner->s.angles, dir );
+g_misc.c:The target for a misc_portal_director.  You can set either angles or target another entity to determine the direction of view.
+g_misc.c:  self->s.angles2[ 0 ] = self->pos2[ 0 ];
+g_misc.c:  findEmptySpot( self->s.origin, 8.0f, self->s.angles2 );
+g_missile.c:      AngleVectors( other->client->ps.viewangles, dir, NULL, NULL );
+g_missile.c:      AngleVectors( other->client->ps.viewangles, dir, NULL, NULL );
+g_mover.c:  vec3_t  angles;
+g_mover.c:void G_CreateRotationMatrix( vec3_t angles, vec3_t matrix[ 3 ] )
+g_mover.c:  AngleVectors( angles, matrix[ 0 ], matrix[ 1 ], matrix[ 2 ] );
+g_mover.c:  VectorCopy( check->s.apos.trBase, pushed_p->angles );
+g_mover.c:    pushed_p->deltayaw = check->client->ps.delta_angles[ YAW ];
+g_mover.c:    check->client->ps.delta_angles[ YAW ] += ANGLE2SHORT( amove[ YAW ] );
+g_mover.c:  VectorCopy( ( pushed_p - 1 )->angles, check->s.apos.trBase );
+g_mover.c:      VectorCopy( p->angles, p->ent->s.apos.trBase );
+g_mover.c:        p->ent->client->ps.delta_angles[ YAW ] = p->deltayaw;
+g_mover.c:  vec3_t    origin, angles;
+g_mover.c:    BG_EvaluateTrajectory( &part->s.apos, level.time, angles );
+g_mover.c:    VectorSubtract( angles, part->r.currentAngles, amove );
+g_mover.c:  vec3_t  origin, dir, angles;
+g_mover.c:  vectoangles( dir, angles );
+g_mover.c:  TeleportPlayer( other, origin, angles );
+g_mover.c:  G_SetMovedir( ent->s.angles, ent->movedir );
+g_mover.c:  VectorClear( ent->s.angles );
+g_mover.c:  VectorCopy( ent->s.angles, ent->pos1 );
+g_mover.c:    VectorCopy( ent->s.angles, ent->pos2 );
+g_mover.c:  VectorCopy( ent->s.angles, ent->s.apos.trBase );
+g_mover.c:  VectorClear( ent->s.angles );
+g_mover.c:  G_SetMovedir( ent->s.angles, ent->movedir );
+g_mover.c:  VectorClear( self->s.angles );
+g_mover.c:Pendulums always swing north / south on unrotated models.  Add an angles field to the model to allow rotation in other directions.
+g_mover.c:  VectorCopy( ent->s.angles, ent->s.apos.trBase );
+g_spawn.c:  {"angles", FOFS(s.angles), F_VECTOR},
+g_spawn.c:  {"angle", FOFS(s.angles), F_ANGLEHACK},
+g_spawn.c:      ent->s.angles[ YAW ] += 180.0f;
+g_spawn.c:      AngleNormalize360( ent->s.angles[ YAW ] );
+g_target.c:  TeleportPlayer( activator, dest->s.origin, dest->s.angles );
+g_trigger.c:  if( !VectorCompare( self->s.angles, vec3_origin ) )
+g_trigger.c:    G_SetMovedir( self->s.angles, self->movedir );
+g_trigger.c:  G_SetMovedir( self->s.angles, self->s.origin2 );
+g_trigger.c:  TeleportPlayer( other, dest->s.origin, dest->s.angles );
+g_utils.c:The editor only specifies a single value for angles (yaw),
+g_utils.c:void G_SetMovedir( vec3_t angles, vec3_t movedir )
+g_utils.c:  if( VectorCompare( angles, VEC_UP ) )
+g_utils.c:  else if( VectorCompare( angles, VEC_DOWN ) )
+g_utils.c:    AngleVectors( angles, movedir, NULL, NULL );
+g_utils.c:  VectorClear( angles );
+g_utils.c:angles and bad trails.
+g_weapon.c:  AngleVectors( ent->client->ps.viewangles, forward, right, up );
+g_weapon.c:  AngleVectors( ent->client->ps.viewangles, forward, right, up );
+g_weapon.c:  AngleVectors( ent->client->ps.viewangles, forward, right, up );
+g_weapon.c:    AngleVectors( ent->client->ps.viewangles, forward, NULL, NULL );
+g_weapon.c:  AngleVectors( ent->client->ps.viewangles, forward, right, up );
+g_weapon.c:  AngleVectors( ent->client->ps.viewangles, forward, right, up );
+g_weapon.c:      AngleVectors( traceEnt->client->ps.viewangles, dir, NULL, NULL );
+g_weapon.c:  AngleVectors( ent->client->ps.viewangles, forward, right, up );
+g_weapon.c:    AngleVectors( ent->client->ps.viewangles, forward, right, up );
+g_weapon.c:    AngleVectors( ent->s.angles2, forward, right, up );
+g_weapon.c:    AngleVectors( ent->client->ps.viewangles, forward, right, up );
+g_weapon.c:    AngleVectors( ent->s.angles2, forward, right, up );
+g_weapon.c:    AngleVectors( ent->client->ps.viewangles, forward, right, up );
+marchbui:  VectorCopy( self->s.angles, new->angles );
+marchbui:  VectorCopy( self->s.angles2, new->angles2 );
+marchbui:  VectorCopy( self->s.angles, new->angles );
+marchbui:  VectorCopy( self->s.angles2, new->angles2 );
+marchbui:        vectoangles( dirToTarget, self->turretAim );
+marchbui:  vec3_t    forward, normal, origin, start, end, angles, hovelMaxs;
+marchbui:  AngleVectors( hovel->s.angles, forward, NULL, NULL );
+marchbui:  vectoangles( forward, angles );
+marchbui:    SetClientViewAngle( player, angles );
+marchbui:static qboolean APropHovel_Blocked( vec3_t origin, vec3_t angles, vec3_t normal,
+marchbui:  VectorCopy( angles, hovel.s.angles );
+marchbui:      vectoangles( inverseNormal, hovelAngles );
+marchbui:  VectorCopy( self->s.angles, new->angles );
+marchbui:  VectorCopy( self->s.angles2, new->angles2 );
+marchbui:    VectorCopy( self->s.angles, newAngles );
+marchbui:  vectoangles( dirToTarget, self->turretAim );
+marchbui:  vectoangles( dttAdjusted, angleToTarget );
+marchbui:  angularDiff[ PITCH ] = AngleSubtract( self->s.angles2[ PITCH ], angleToTarget[ PITCH ] );
+marchbui:  angularDiff[ YAW ] = AngleSubtract( self->s.angles2[ YAW ], angleToTarget[ YAW ] );
+marchbui:    self->s.angles2[ PITCH ] += angularSpeed;
+marchbui:    self->s.angles2[ PITCH ] -= angularSpeed;
+marchbui:    self->s.angles2[ PITCH ] = angleToTarget[ PITCH ];
+marchbui:  temp = fabs( self->s.angles2[ PITCH ] );
+marchbui:    self->s.angles2[ PITCH ] = (-360) + MGTURRET_VERTICALCAP;
+marchbui:    self->s.angles2[ YAW ] += angularSpeed;
+marchbui:    self->s.angles2[ YAW ] -= angularSpeed;
+marchbui:    self->s.angles2[ YAW ] = angleToTarget[ YAW ];
+marchbui:  AngleVectors( self->s.angles2, dttAdjusted, NULL, NULL );
+marchbui:  vectoangles( dirToTarget, self->turretAim );
+marchbui:  if( abs( angleToTarget[ YAW ] - self->s.angles2[ YAW ] ) <= accuracyTolerance &&
+marchbui:      abs( angleToTarget[ PITCH ] - self->s.angles2[ PITCH ] ) <= accuracyTolerance )
+marchbui:        vectoangles( dir, self->turretAim );
+marchbui:  VectorCopy( self->s.angles, new->angles );
+marchbui:  VectorCopy( self->s.angles2, new->angles2 );
+marchbui:    VectorCopy( ent->s.angles, new->angles );
+marchbui:    VectorCopy( ent->s.angles2, new->angles2 );
+marchbui:  vec3_t            angles;
+marchbui:  BG_PositionBuildableRelativeToPlayer( ps, mins, maxs, trap_Trace, entity_origin, angles, &tr1 );
+marchbui:      if( APropHovel_Blocked( angles, origin, normal, ent ) )
+marchbui:static gentity_t *G_Build( gentity_t *builder, buildable_t buildable, vec3_t origin, vec3_t angles )
+marchbui:  // set turret angles
+marchbui:  VectorCopy( builder->s.angles2, built->s.angles2 );
+marchbui:  VectorCopy( angles, built->s.angles );
+marchbui:  built->s.angles[ PITCH ] = 0.0f;
+marchbui:  built->s.angles2[ YAW ] = angles[ YAW ];
+marchbui:    VectorCopy( built->s.angles, new->angles );
+marchbui:    VectorCopy( built->s.angles2, new->angles2 );
+marchbui:  built = G_Build( ent, buildable, ent->s.pos.trBase, ent->s.angles );
+marchbui:      ent->s.angles[ 0 ],
+marchbui:      ent->s.angles[ 1 ],
+marchbui:      ent->s.angles[ 2 ],
+marchbui:      ent->s.angles2[ 0 ],
+marchbui:      ent->s.angles2[ 1 ],
+marchbui:      ent->s.angles2[ 2 ] );
+marchbui:  vec3_t angles, vec3_t origin2, vec3_t angles2 )
+marchbui:  VectorCopy( angles, builder->s.angles );
+marchbui:  VectorCopy( angles2, builder->s.angles2 );
+marchbui:gentity_t *G_InstantBuild( buildable_t buildable, vec3_t origin, vec3_t angles, vec3_t origin2, vec3_t 
+marchbui:angles2 )
+marchbui:  VectorCopy( angles, builder->s.angles );
+marchbui:  VectorCopy( angles2, builder->s.angles2 );
+marchbui:  built = G_Build( builder, buildable, builder->s.pos.trBase, builder->s.angles );
+marchbui:  built = G_InstantBuild( bh->buildable, bh->origin, bh->angles, bh->origin2, bh->angles2 );
+marchbui:  vec3_t angles = { 0.0f, 0.0f, 0.0f };
+marchbui:  vec3_t angles2 = { 0.0f, 0.0f, 0.0f };
+marchbui:        &angles[ 0 ], &angles[ 1 ], &angles[ 2 ],
+marchbui:        &angles2[ 0 ], &angles2[ 1 ], &angles2[ 2 ] );
+marchbui:        G_LayoutBuildItem( buildable, origin, angles, origin2, angles2 );
+tstbgpub:// if a full pmove isn't done on the client, you can just update the angles
+tstbgpub:  MOD_BG_TURRET_ANGLE,      // Allow high turret build angles
+wpn.txt:<   AngleVectors( ent->client->ps.viewangles, forward, right, up );
+wpn.txt:>   AngleVectors( ent->client->ps.viewangles, forward, right, up );

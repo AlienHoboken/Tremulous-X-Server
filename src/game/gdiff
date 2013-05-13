@@ -1,0 +1,851 @@
+120c120,121
+<   "MOD_OVERMIND"
+---
+>   "MOD_OVERMIND",
+>   "MOD_RADIATION",
+121a123
+>   "MOD_EXPLODE"
+135a138
+>   float     totalTK = 0;
+139a143
+>   int       spreeRate = 0;
+144a149,160
+>   if( attacker != self && attacker->client->ps.stats[ STAT_PTEAM ]  == self->client->ps.stats[ STAT_PTEAM ] ) 
+>   {
+>     attacker->client->pers.statscounters.teamkills++;
+>     if( attacker->client->pers.teamSelection == PTE_ALIENS ) 
+>     {
+>       level.alienStatsCounters.teamkills++;
+>     }
+>     else if( attacker->client->pers.teamSelection == PTE_HUMANS )
+>     {
+>      level.humanStatsCounters.teamkills++;
+>     }
+>   }
+148a165,167
+>   // stop any following clients
+>   // r1: removed, annoying.
+> 
+161,174d179
+< 
+<       if( attacker != self && attacker->client->ps.stats[ STAT_PTEAM ]  == self->client->ps.stats[ STAT_PTEAM ] ) 
+<       {
+<         attacker->client->pers.statscounters.teamkills++;
+<         if( attacker->client->pers.teamSelection == PTE_ALIENS ) 
+<         {
+<           level.alienStatsCounters.teamkills++;
+<         }
+<         else if( attacker->client->pers.teamSelection == PTE_HUMANS )
+<         {
+<           level.humanStatsCounters.teamkills++;
+<         }
+<       }
+< 
+196,218d200
+< 	if( meansOfDeath == MOD_SLAP )
+< 	{
+< 		if( self == attacker || !attacker )
+< 		{
+< 			if( g_slapKnockback.integer ){
+< 				trap_SendServerCommand( -1, va( "print \"%s^7 slapped themself silly\n\"",
+< 											   self->client->pers.netname ) );
+< 			}
+< 			else {
+< 				trap_SendServerCommand( -1, va( "print \"%s^7 suffered a heart attck\n\"",
+< 											   self->client->pers.netname ));
+< 			}
+< 		}
+< 		else
+< 			trap_SendServerCommand( -1,
+< 								   va( "print \"%s^7 felt %s^7's authoritay\n\"",
+< 									  self->client->pers.netname, killerName ) );
+< 		
+< 		// do not send obituary or credit any kills by slapping, skip straight to
+< 		// setting the animations etc
+< 		goto finish_dying;
+< 	}
+< 	
+229a212,260
+>   // killing spree over
+>   if( self->client->pers.statscounters.spreekills == -1 )
+>   {
+>     spreeRate = 2;
+>     trap_SendServerCommand( -1,
+>      va( "print \"%s^7's killing spree has come to an end\n\"",
+>      self->client->pers.netname ) );
+>   }
+>   self->client->pers.statscounters.spreekills = 0;
+>     
+>   if( meansOfDeath == MOD_SLAP )
+>   {
+>     if( self == attacker || !attacker )
+>     {
+>      if( g_slapKnockback.integer ){
+>       trap_SendServerCommand( -1, va( "print \"%s^7 slapped themself silly\n\"",
+>         self->client->pers.netname ) );
+>      }
+>      else {
+>       trap_SendServerCommand( -1, va( "print \"%s^7 suffered a heart attck\n\"",
+>         self->client->pers.netname ));
+>      }
+>     }
+>     else
+>       trap_SendServerCommand( -1,
+>         va( "print \"%s^7 felt %s^7's authoritay\n\"",
+>         self->client->pers.netname, killerName ) );
+> 
+>     // do not send obituary or credit any kills by slapping, skip straight to
+>     // setting the animations etc
+>     goto finish_dying;
+>   }
+>   
+>   else if( meansOfDeath == MOD_EXPLODE )
+>     {
+>       if( self == attacker || !attacker )
+>         trap_SendServerCommand( -1, va( "print \"%s^7 blew up in a firey death.\n\"",
+>           self->client->pers.netname ) );
+>       else
+>         trap_SendServerCommand( -1,
+>           va( "print \"^7%s^7 shouldn't have stood so close to ^7%s^7\n\"",
+>           self->client->pers.netname, killerName ) );
+> 
+>       // do not send obituary or credit any kills by slapping, skip straight to
+>       // setting the animations etc
+>       goto finish_dying;
+>     }
+> 
+> 
+231c262,270
+<   if( !tk )
+---
+>   else if( !tk )
+>   {
+>   // this works as a temporary hack until the client supports it
+>   if ( meansOfDeath == MOD_RADIATION )
+>     trap_SendServerCommand( -1, va( "print \"%s^7 was irradiated by his base\n\"", self->client->pers.netname ) );
+>   else if ( meansOfDeath == MOD_LEVEL2_CLAW && g_maraObituary.integer )
+>     trap_SendServerCommand( -1, va( "print \"%s^7 bit off %s^7's face\n\"", attacker->client->pers.netname, 
+> self->client->pers.netname ) );
+>   else
+239c278,280
+<   else if( attacker && attacker->client )
+---
+>   
+>   }
+>   else 
+245c286,287
+<       self->client->pers.netname, attacker->client->pers.netname, self->client->tkcredits[ attacker->s.number ], self->client->ps.stats[ STAT_MAX_HEALTH ] ) );
+---
+>       self->client->pers.netname, attacker->client->pers.netname, self->client->tkcredits[ attacker->s.number ], 
+> self->client->ps.stats[ STAT_MAX_HEALTH ] ) );
+248,249c290,291
+<     G_LogOnlyPrintf("%s^7 was killed by ^1TEAMMATE^7 %s^7 (Did %d damage to %d max)\n",
+<       self->client->pers.netname, attacker->client->pers.netname, self->client->tkcredits[ attacker->s.number ], self->client->ps.stats[ STAT_MAX_HEALTH ] );
+---
+> 
+>     G_admin_tklog_log( attacker, self, meansOfDeath );
+258c300
+<     level.alienStatsCounters.deaths++;
+---
+>    level.alienStatsCounters.deaths++;
+262c304
+<      level.humanStatsCounters.deaths++;
+---
+>     level.humanStatsCounters.deaths++;
+268,269c310,311
+< 
+<    if( g_devmapKillerHP.integer && g_cheats.integer ) 
+---
+> 	  
+>    if( g_KillerHP.integer ) 
+271c313,314
+<      trap_SendServerCommand( self-g_entities, va( "print \"Your killer, %s, had %3i HP.\n\"", killerName, attacker->health ) );
+---
+>      trap_SendServerCommand( self-g_entities, va( "print \"Your killer, %s^7, had %3i HP.\n\"", killerName, 
+> attacker->health ) );
+278,317d320
+<       // Retribution: transfer value of player from attacker to victim
+<       if( g_retribution.integer) {
+<           if(attacker!=self){
+<         int max = ALIEN_MAX_KILLS, tk_value = 0;
+<         char *type = "evos";
+< 
+<         if( attacker->client->ps.stats[ STAT_PTEAM ] == PTE_ALIENS ) 
+<         {
+<             tk_value = BG_ClassCanEvolveFromTo( PCL_ALIEN_LEVEL0,
+<             self->client->ps.stats[ STAT_PCLASS ], ALIEN_MAX_KILLS, 0 );
+<         } else 
+<         {
+<           tk_value = BG_GetValueOfEquipment( &self->client->ps );
+<           max = HUMAN_MAX_CREDITS;
+<           type = "credits";
+<         }
+< 
+<         if( attacker->client->ps.persistant[ PERS_CREDIT ] < tk_value )
+<           tk_value = attacker->client->ps.persistant[ PERS_CREDIT ];
+<         if( self->client->ps.persistant[ PERS_CREDIT ]+tk_value > max )
+<           tk_value = max-self->client->ps.persistant[ PERS_CREDIT ];
+< 
+<         if( tk_value > 0 ) {
+< 
+<           // adjust using the retribution cvar (in percent)
+<           tk_value = tk_value*g_retribution.integer/100;
+< 
+<           G_AddCreditToClient( self->client, tk_value, qtrue );
+<           G_AddCreditToClient( attacker->client, -tk_value, qtrue );
+< 
+<           trap_SendServerCommand( self->client->ps.clientNum,
+<             va( "print \"Received ^3%d %s ^7from %s ^7in retribution.\n\"",
+<             tk_value, type, attacker->client->pers.netname ) );
+<           trap_SendServerCommand( attacker->client->ps.clientNum,
+<             va( "print \"Transfered ^3%d %s ^7to %s ^7in retribution.\n\"",
+<             tk_value, type, self->client->pers.netname ) );
+<         }
+<           }
+<       }
+< 
+319c322
+<       else {
+---
+>       if( !g_retribution.integer ) {
+334c337
+<         level.alienStatsCounters.kills++;
+---
+>        level.alienStatsCounters.kills++;
+338c341,354
+<          level.humanStatsCounters.kills++;
+---
+>         level.humanStatsCounters.kills++;
+>       }
+> 
+>       if( g_killingSpree.integer > 2 )
+>       {
+>         if( attacker->client->pers.statscounters.spreekills >= 0 )
+>           attacker->client->pers.statscounters.spreekills += 60;
+>         if( attacker->client->pers.statscounters.spreekills > ( g_killingSpree.integer - 1 ) * 60 )
+>         {
+>           attacker->client->pers.statscounters.spreekills = -1;
+>           trap_SendServerCommand( -1,
+>             va( "print \"%s^3 is on a killing spree! killer gets a double reward bonus\n\"",
+>             attacker->client->pers.netname ) );
+>         }
+347c363
+<         level.alienStatsCounters.suicides++;
+---
+>        level.alienStatsCounters.suicides++;
+359a376
+>   {
+360a378,493
+>     totalTK += (float)self->client->tkcredits[ i ];
+>   }
+>   // punish players for damaging teammates
+>   if ( g_retribution.integer && totalTK )
+>   {
+>     int totalPrice;
+>     int max = HUMAN_MAX_CREDITS;
+> 
+>     if ( self->client->ps.stats[ STAT_PTEAM ] == PTE_ALIENS )
+>     {
+>       totalPrice = BG_ClassCanEvolveFromTo( PCL_ALIEN_LEVEL0, self->client->ps.stats[ STAT_PCLASS ], ALIEN_MAX_KILLS, 
+> 0 );
+>       max = ALIEN_MAX_KILLS;
+>     }
+>     else
+>     {
+>       totalPrice = BG_GetValueOfEquipment( &self->client->ps );
+>     }
+> 
+>     if ( self->client->ps.persistant[ PERS_CREDIT ] + totalPrice > max )
+>       totalPrice = max - self->client->ps.persistant[ PERS_CREDIT ];
+> 
+>     if ( totalPrice > 0 )
+>     {
+>       totalTK += totalDamage;
+>       if( totalTK < self->client->ps.stats[ STAT_MAX_HEALTH ] )
+>         totalTK = self->client->ps.stats[ STAT_MAX_HEALTH ];
+> 
+>       if ( self->client->ps.stats[ STAT_PTEAM ] == PTE_HUMANS )
+>       {
+>         for ( i = 0; i < MAX_CLIENTS; i++ )
+>         {
+>           int price;
+>           // no retribution if self damage or enemmy damage or building damage or no damage from this client
+>           if ( i == self - g_entities || !g_entities[ i ].client || !OnSameTeam( &g_entities[ i ], self ) || 
+> !self->client->tkcredits[ i ] )
+>             continue;
+> 
+>           // calculate retribution price (rounded up)
+>           price = ( totalPrice * self->client->tkcredits[ i ] ) / totalTK + 0.5f;
+>           self->client->tkcredits[ i ] = 0;
+> 
+>           // check for enough credits
+>           if ( g_entities[ i ].client->ps.persistant[ PERS_CREDIT ] < price )
+>             price = g_entities[ i ].client->ps.persistant[ PERS_CREDIT ];
+>           if ( price )
+>           {
+>             G_AddCreditToClient( self->client, price, qtrue );
+>             G_AddCreditToClient( g_entities[ i ].client, -price, qtrue );
+> 
+>             trap_SendServerCommand( self->client->ps.clientNum, va( "print \"Received ^3%d credits ^7from %s ^7in 
+> retribution.\n\"", price, g_entities[ i ].client->pers.netname ) );
+>             trap_SendServerCommand( g_entities[ i ].client->ps.clientNum, va( "print \"Transfered ^3%d credits ^7to 
+> %s ^7in retribution.\n\"", price, self->client->pers.netname ) );
+>           }
+>         }
+>       }
+>       else
+>       {
+>         int toPay[ MAX_CLIENTS ] = { 0 };
+>         int frags = totalPrice;
+>         int damageForEvo = totalTK / totalPrice;
+>         for ( i = 0; i < MAX_CLIENTS; i++ )
+>         {
+>           // no retribution if self damage or enemmy damage or building damage or no damage from this client
+>           if ( i == self - g_entities || !g_entities[ i ].client || !OnSameTeam( &g_entities[ i ], self ) || 
+> !self->client->tkcredits[ i ] )
+>             continue;
+> 
+>           // find out how many full evos this client needs to pay
+>           toPay[ i ] = ( totalPrice * self->client->tkcredits[ i ] ) / totalTK;
+>           if ( toPay[ i ] > g_entities[ i ].client->ps.persistant[ PERS_CREDIT ] )
+>             toPay[ i ] = g_entities[ i ].client->ps.persistant[ PERS_CREDIT ];
+>           frags -= toPay[ i ];
+>           self->client->tkcredits[ i ] -= damageForEvo * toPay[ i ];
+>         }
+> 
+>         // if we have not met the evo count, continue stealing evos
+>         while ( 1 )
+>         {
+>           int maximum = 0;
+>           int topClient = 0;
+>           for ( i = 0; i < MAX_CLIENTS; i++ )
+>           {
+>             if ( self->client->tkcredits[ i ] > maximum && g_entities[ i ].client->ps.persistant[ PERS_CREDIT ] )
+>             {
+>               maximum = self->client->tkcredits[ i ];
+>               topClient = i;
+>             }
+>           }
+>           if ( !maximum )
+>             break;
+>           toPay[ topClient ]++;
+>           self->client->tkcredits[ topClient ] = 0;
+>           frags--;
+>           if ( !frags )
+>            break;
+>         }
+>         
+>         // now move the evos around
+>         for ( i = 0; i < MAX_CLIENTS; i++ )
+>         {
+>           if ( !toPay[ i ] )
+>             continue;
+>           
+>           G_AddCreditToClient( self->client, toPay[ i ], qtrue );
+>           G_AddCreditToClient( g_entities[ i ].client, -toPay[ i ], qtrue );
+> 
+>           trap_SendServerCommand( self->client->ps.clientNum, va( "print \"Received ^3%d ^7evos from %s ^7in 
+> retribution.\n\"", toPay[ i ], g_entities[ i ].client->pers.netname ) );
+>           trap_SendServerCommand( g_entities[ i ].client->ps.clientNum, va( "print \"Transfered ^3%d ^7evos to %s 
+> ^7in retribution.\n\"", toPay[ i ], self->client->pers.netname ) );
+>         }
+>       }
+>     }
+>   }
+363c496,497
+<   if( !OnSameTeam( self, attacker ) && totalDamage >= ( self->client->ps.stats[ STAT_MAX_HEALTH ] * DAMAGE_FRACTION_FOR_KILL ) )
+---
+>   if( !OnSameTeam( self, attacker ) && totalDamage >= ( self->client->ps.stats[ STAT_MAX_HEALTH ] * 
+> DAMAGE_FRACTION_FOR_KILL ) )
+370,371c504,513
+<         self->client->pers.statscounters.feeds++;
+<         level.humanStatsCounters.feeds++;
+---
+> 	self->client->pers.statscounters.feeds++;
+> 	level.humanStatsCounters.feeds++;
+> 
+>         if( g_feedingSpree.integer &&
+>             level.reactorPresent &&
+>             !G_BuildableRange( self->client->ps.origin, 600, BA_H_REACTOR ) &&
+>             !G_BuildableRange( self->client->ps.origin, 200, BA_H_SPAWN ) )
+>         {
+>           self->client->pers.statscounters.spreefeeds += SPREE_FEED_VALUE;
+>         }
+379,380c521,530
+<         self->client->pers.statscounters.feeds++;
+<         level.alienStatsCounters.feeds++;
+---
+> 	self->client->pers.statscounters.feeds++;
+> 	level.alienStatsCounters.feeds++;
+> 
+>         if( g_feedingSpree.integer &&
+>             level.overmindPresent &&
+>             !G_BuildableRange( self->client->ps.origin, 600, BA_A_OVERMIND ) &&
+>             !G_BuildableRange( self->client->ps.origin, 200, BA_A_SPAWN ) )
+>         {
+>           self->client->pers.statscounters.spreefeeds += SPREE_FEED_VALUE;
+>         }
+404,408c554,558
+< 
+<         percentDamage = (float)self->credits[ i ] / totalDamage;
+<         if( percentDamage > 0 && percentDamage < 1)
+<         {
+<           player->client->pers.statscounters.assists++;
+---
+> 	
+> 	percentDamage = (float)self->credits[ i ] / totalDamage;
+> 	if( percentDamage > 0 && percentDamage < 1)
+> 	{
+> 	  player->client->pers.statscounters.assists++;
+410c560,564
+<         }
+---
+> 
+> 	}
+> 
+>         if( spreeRate && player == attacker )
+>           percentDamage *= (float)spreeRate;
+442,448c596,602
+<         percentDamage = (float)self->credits[ i ] / totalDamage;
+<          if( percentDamage > 0 && percentDamage < 1)
+<          {
+<             player->client->pers.statscounters.assists++;
+<             level.alienStatsCounters.assists++;
+<          }
+<     
+---
+> 	percentDamage = (float)self->credits[ i ] / totalDamage;
+> 	if( percentDamage > 0 && percentDamage < 1)
+> 	{
+> 	  player->client->pers.statscounters.assists++;
+> 	  level.alienStatsCounters.assists++;
+> 	}
+> 	
+454c608,611
+<           G_AddCreditToClient( player->client, frags, qtrue );
+---
+>           if( spreeRate && player == attacker )
+>             G_AddCreditToClient( player->client, frags * spreeRate, qtrue );
+>           else
+>             G_AddCreditToClient( player->client, frags, qtrue );
+495c652,655
+<             G_AddCreditToClient( player->client, 1, qtrue );
+---
+>             if( spreeRate && player == attacker )
+>               G_AddCreditToClient( player->client, spreeRate, qtrue );
+>             else
+>               G_AddCreditToClient( player->client, 1, qtrue );
+523d682
+< 	
+525c684,685
+< 	
+---
+> 
+>   self->client->pers.classSelection = PCL_NONE; //TA: reset the classtype
+547a708,739
+>   if( g_feedingSpree.integer )
+>   {
+>     int maxfeed;
+> 
+>     maxfeed = g_feedingSpree.integer * SPREE_FEED_VALUE;
+>     if( self->client->pers.statscounters.spreefeeds > maxfeed )
+>     {
+>       self->client->respawnTime += SPREE_FEED_DELAY * (self->client->pers.statscounters.spreefeeds - maxfeed );
+>       trap_SendServerCommand( self->client->ps.clientNum,
+>         va( "print \"You are on a feeding spree! respawn delayed %d seconds\n\"",
+>         (self->client->respawnTime - level.time) / 1000 ) );
+>     }
+>   }
+> 
+>   if( self->client->pers.bleeder )
+>   {
+>     int spreeLength;
+> 
+>     spreeLength = self->client->pers.statscounters.spreebleeds / 10;
+>     self->client->respawnTime += 9 * 1000;
+>     
+>     trap_SendServerCommand( self->client->ps.clientNum,
+>       va( "print \"^3Bleeding has made you an enemy of your own base for ^7%d:%02d\n^1Respawn delayed ^7%d^1 
+> seconds\n",
+>         spreeLength / 60, spreeLength % 60,
+>         ( self->client->respawnTime - level.time) / 1000 ) );
+>     trap_SendServerCommand( self->client->ps.clientNum,
+>       va( "cp \"^3Bleeding made you an enemy of your own base!\n\n^7for %d:%02d\n\n^1Respawn delayed %d seconds\"",
+>         spreeLength / 60, spreeLength % 60,
+>         ( self->client->respawnTime - level.time) / 1000 ) );
+>   }
+> 
+910,914c1102,1103
+<     if( attacker && attacker->client )
+<     {
+<       attacker->client->pers.statscounters.hitslocational++;
+<       level.alienStatsCounters.hitslocational++;
+<     }
+---
+>     attacker->client->pers.statscounters.hitslocational++;
+>     level.alienStatsCounters.hitslocational++;
+940c1129
+<     if( attacker && attacker->client && modifier == 2 )
+---
+>     if(modifier == 2)
+942,943c1131,1132
+<       attacker->client->pers.statscounters.headshots++;
+<       level.alienStatsCounters.headshots++;
+---
+>      attacker->client->pers.statscounters.headshots++;
+>      level.alienStatsCounters.headshots++;
+1079c1268
+<   if( targ->client && ( team != targ->client->ps.stats[ STAT_PTEAM ] ) )
+---
+>   if( targ->client && ( team != targ->client->ps.stats[ STAT_PTEAM ] || targ->client->pers.bleeder ) )
+1090a1280
+>   int     takeNoOverkill;
+1092d1281
+<   int takeNoOverkill;
+1106a1296,1297
+>   else if( attacker->client && attacker->client->pers.paused )
+>     return;
+1123a1315,1316
+>       if( client->pers.paused )
+>       return;
+1202,1208c1395,1397
+<       } 
+<       else if(mod == MOD_LEVEL4_CHARGE || mod == MOD_LEVEL3_POUNCE )
+<       { // don't do friendly fire on movement attacks
+<         if( g_friendlyFireMovementAttacks.value <= 0 || ( g_friendlyFire.value<=0 && g_friendlyFireAliens.value<=0 ) )
+<           return;
+<         else if( g_friendlyFireMovementAttacks.value > 0 && g_friendlyFireMovementAttacks.value < 1 )
+<          damage =(int)(0.5 + g_friendlyFireMovementAttacks.value * (float) damage);
+---
+>       } else if( !g_friendlyFireMovementAttacks.integer && (mod == MOD_LEVEL4_CHARGE || mod == MOD_LEVEL3_POUNCE )){
+> 	       // don't do friendly fire on movement attacks
+> 	       return;
+1210c1399
+<       else if( g_friendlyFire.value <=0)
+---
+>       else if( !g_friendlyFire.integer )
+1212c1401,1402
+<         if( targ->client->ps.stats[ STAT_PTEAM ] == PTE_HUMANS )
+---
+>         if( !g_friendlyFireHumans.integer 
+>           && targ->client->ps.stats[ STAT_PTEAM ] == PTE_HUMANS )
+1214,1217c1404
+<           if(g_friendlyFireHumans.value<=0)
+<             return;
+<           else if( g_friendlyFireHumans.value > 0 && g_friendlyFireHumans.value < 1 )
+<             damage =(int)(0.5 + g_friendlyFireHumans.value * (float) damage);       
+---
+>           return;
+1219c1406,1407
+<         if( targ->client->ps.stats[ STAT_PTEAM ] == PTE_ALIENS )
+---
+>         if( !g_friendlyFireAliens.integer 
+>           && targ->client->ps.stats[ STAT_PTEAM ] == PTE_ALIENS )
+1221,1224c1409
+<           if(g_friendlyFireAliens.value==0)
+<             return;
+<           else if( g_friendlyFireAliens.value > 0 && g_friendlyFireAliens.value < 1 )
+<            damage =(int)(0.5 + g_friendlyFireAliens.value * (float) damage);
+---
+>           return;
+1227,1230d1411
+<       else if( g_friendlyFire.value > 0 && g_friendlyFire.value < 1 )
+<       {
+<         damage =(int)(0.5 + g_friendlyFire.value * (float) damage);
+<       }
+1233,1252c1414,1424
+<     // If target is buildable on the same team as the attacking client
+<     if( targ->s.eType == ET_BUILDABLE && attacker->client &&
+<         targ->biteam == attacker->client->pers.teamSelection )
+<     {
+<       if(mod == MOD_LEVEL4_CHARGE || mod == MOD_LEVEL3_POUNCE ) 
+<       {
+<          if(g_friendlyFireMovementAttacks.value <= 0)
+<            return;
+<          else if(g_friendlyFireMovementAttacks.value > 0 && g_friendlyFireMovementAttacks.value < 1)
+<            damage =(int)(0.5 + g_friendlyFireMovementAttacks.value * (float) damage);
+<       }
+<       if( g_friendlyBuildableFire.value <= 0 )
+<       {
+<         return;
+<       }
+<       else if( g_friendlyBuildableFire.value > 0 && g_friendlyBuildableFire.value < 1 )
+<       {
+<          damage =(int)(0.5 + g_friendlyBuildableFire.value * (float) damage);
+<       }
+<     }
+---
+> 		// If target is buildable on the same team as the attacking client
+> 		if( targ->s.eType == ET_BUILDABLE && attacker->client &&
+> 				targ->biteam == attacker->client->pers.teamSelection )
+> 		{
+> 			if( !g_friendlyBuildableFire.integer )
+> 				return;
+> 			// don't do friendly fire on movement attacks
+> 			 if( !g_friendlyFireMovementAttacks.integer && (mod == MOD_LEVEL4_CHARGE || mod == 
+> MOD_LEVEL3_POUNCE ))
+> 			return;
+> 		}
+1256a1429,1432
+> 
+>     // paused
+>     if ( level.paused )
+>       return;
+1259c1435
+<       return;
+---
+> 	    return;
+1319,1320c1495,1496
+<         attacker->client->pers.statscounters.repairspoisons++;
+<         level.alienStatsCounters.repairspoisons++;
+---
+> 	attacker->client->pers.statscounters.repairspoisons++;
+> 	level.alienStatsCounters.repairspoisons++;
+1334,1341d1509
+<   takeNoOverkill = take;
+<   if( takeNoOverkill > targ->health ) 
+<   {
+<     if(targ->health > 0)
+<       takeNoOverkill = targ->health;
+<     else
+<       takeNoOverkill = 0;
+<   }
+1344a1513,1517
+>     if( take > targ->health ) 
+>     {
+>       take = targ->health;
+>     }
+>     
+1346c1519
+<     if( attacker && attacker->client )
+---
+>     if( attacker->client )
+1350,1373c1523,1534
+<         attacker->client->pers.statscounters.ffdmgdone += takeNoOverkill;
+<         if( attacker->client->pers.teamSelection == PTE_ALIENS ) 
+<         {
+<           level.alienStatsCounters.ffdmgdone+=takeNoOverkill;
+<         }
+<         else if( attacker->client->pers.teamSelection == PTE_HUMANS )
+<         {
+<           level.humanStatsCounters.ffdmgdone+=takeNoOverkill;
+<         }
+<       }
+<       else if( targ->s.eType == ET_BUILDABLE )
+<       {
+<         attacker->client->pers.statscounters.structdmgdone += takeNoOverkill;
+<             
+<         if( attacker->client->pers.teamSelection == PTE_ALIENS ) 
+<         {
+<           level.alienStatsCounters.structdmgdone+=takeNoOverkill;
+<         }
+<         else if( attacker->client->pers.teamSelection == PTE_HUMANS )
+<         {
+<           level.humanStatsCounters.structdmgdone+=takeNoOverkill;
+<         }
+<             
+<         if( targ->health > 0 && ( targ->health - take ) <=0 )
+---
+> 	attacker->client->pers.statscounters.ffdmgdone += take;
+> 	if( attacker->client->pers.teamSelection == PTE_ALIENS ) 
+> 	{
+> 	 level.alienStatsCounters.ffdmgdone+=take;
+> 	}
+> 	else if( attacker->client->pers.teamSelection == PTE_HUMANS )
+> 	{
+> 	  level.humanStatsCounters.ffdmgdone+=take;
+> 	}
+> 
+>         // bleeding spree
+>         if( g_bleedingSpree.integer > 1 )
+1375,1376c1536,1538
+<           attacker->client->pers.statscounters.structskilled++;
+<           if( attacker->client->pers.teamSelection == PTE_ALIENS ) 
+---
+>           attacker->client->pers.statscounters.spreebleeds += take;
+>           if( attacker->client->pers.statscounters.spreebleeds > g_bleedingSpree.integer * 100 &&
+>               !attacker->client->pers.bleeder )
+1378c1540,1548
+<             level.alienStatsCounters.structskilled++;
+---
+>             attacker->client->pers.bleeder = qtrue;
+>             level.bleeders++;
+>             trap_SendServerCommand( -1,
+>               va( "print \"%s^3 has become an enemy of their own base\n\"",
+>               attacker->client->pers.netname ) );
+>             trap_SendServerCommand( attacker - g_entities,
+>               "cp \"^1Your team bleeding has irritated your base!\"" );
+> 
+>             G_admin_tklog_log( attacker, NULL, mod );
+1380c1550,1552
+<           else if( attacker->client->pers.teamSelection == PTE_HUMANS )
+---
+>           else if( attacker->client->pers.statscounters.spreebleeds > g_bleedingSpree.integer * 66 &&
+>                   !attacker->client->pers.bleeder &&
+>                    attacker->client->pers.bleederLastWarn + 20 * 1000 < level.time )
+1382c1554,1558
+<             level.humanStatsCounters.structskilled++;
+---
+>             attacker->client->pers.bleederLastWarn = level.time;
+>             trap_SendServerCommand( attacker - g_entities,
+>               "print \"^3Your bleeding is close to aggravating your base!\"" );
+>             trap_SendServerCommand( attacker - g_entities,
+>               "cp \"^1Your bleeding is close to aggravating your base!\n\"" );
+1386c1562
+<       else if( targ->client )
+---
+>       else if( targ->s.eType == ET_BUILDABLE )
+1388,1390c1564,1588
+<         attacker->client->pers.statscounters.dmgdone +=takeNoOverkill;
+<         attacker->client->pers.statscounters.hits++;
+<         if( attacker->client->pers.teamSelection == PTE_ALIENS ) 
+---
+> 	attacker->client->pers.statscounters.structdmgdone += take;
+> 	      
+> 	if( attacker->client->pers.teamSelection == PTE_ALIENS ) 
+> 	{
+> 	 level.alienStatsCounters.structdmgdone+=take;
+> 	}
+> 	else if( attacker->client->pers.teamSelection == PTE_HUMANS )
+> 	{
+> 	  level.humanStatsCounters.structdmgdone+=take;
+> 	}
+> 	      
+> 	if( targ->health > 0 && ( targ->health - take ) <=0 )
+> 	{
+> 	 attacker->client->pers.statscounters.structskilled++;
+> 	 if( attacker->client->pers.teamSelection == PTE_ALIENS ) 
+> 	 {
+> 	  level.alienStatsCounters.structskilled++;
+> 	 }
+> 	 else if( attacker->client->pers.teamSelection == PTE_HUMANS )
+> 	 {
+> 	   level.humanStatsCounters.structskilled++;
+> 	 }
+> 	}
+> 
+>         if( attacker->client->pers.statscounters.spreefeeds )
+1392c1590,1592
+<           level.alienStatsCounters.dmgdone+=takeNoOverkill;
+---
+>           attacker->client->pers.statscounters.spreefeeds -= take;
+>           if( attacker->client->pers.statscounters.spreefeeds < 0 )
+>             attacker->client->pers.statscounters.spreefeeds = 0;
+1394c1594,1608
+<         else if( attacker->client->pers.teamSelection == PTE_HUMANS )
+---
+>       }
+>       else if( targ->client )
+>       {
+> 	attacker->client->pers.statscounters.dmgdone +=take;
+>         attacker->client->pers.statscounters.hits++; 	      
+> 	if( attacker->client->pers.teamSelection == PTE_ALIENS ) 
+> 	{
+> 	 level.alienStatsCounters.dmgdone+=take;
+> 	}
+> 	else if( attacker->client->pers.teamSelection == PTE_HUMANS )
+> 	{
+> 	  level.humanStatsCounters.dmgdone+=take;
+> 	}
+> 
+>         if( attacker->client->pers.statscounters.spreefeeds )
+1396c1610,1612
+<           level.humanStatsCounters.dmgdone+=takeNoOverkill;
+---
+>           attacker->client->pers.statscounters.spreefeeds -= take;
+>           if( attacker->client->pers.statscounters.spreefeeds < 0 )
+>             attacker->client->pers.statscounters.spreefeeds = 0;
+1398c1614
+<       }
+---
+>       }	
+1402,1403c1618,1624
+<     //Do the damage
+<     targ->health = targ->health - take;
+---
+>     takeNoOverkill = take;
+>     if( takeNoOverkill > targ->health ) 
+>     {
+>       takeNoOverkill = targ->health;
+>     }
+>     
+>     targ->health = targ->health - take;   // do the damage
+1415c1636
+<       else if( attacker != targ && OnSameTeam( targ, attacker ) )
+---
+> 	  else if( attacker != targ && OnSameTeam( targ, attacker ) )
+1639,1673c1860,1894
+< 	if( knockback && targ->client )
+< 	{
+< 		vec3_t  kvel;
+< 		float   mass;
+< 		
+< 		mass = 200;
+< 		
+< 		// Halve knockback for bsuits
+< 		if( targ->client &&
+< 		   targ->client->ps.stats[ STAT_PTEAM ] == PTE_HUMANS &&
+< 		   BG_InventoryContainsUpgrade( UP_BATTLESUIT, targ->client->ps.stats ) )
+< 			mass += 400;
+< 		
+< 		// Halve knockback for crouching players
+< 		if(targ->client->ps.pm_flags&PMF_DUCKED) knockback /= 2;
+< 		
+< 		VectorScale( dir, g_knockback.value * (float)knockback / mass, kvel );
+< 		VectorAdd( targ->client->ps.velocity, kvel, targ->client->ps.velocity );
+< 		
+< 		// set the timer so that the other client can't cancel
+< 		// out the movement immediately
+< 		if( !targ->client->ps.pm_time )
+< 		{
+< 			int   t;
+< 			
+< 			t = knockback * 2;
+< 			if( t < 50 )
+< 				t = 50;
+< 			
+< 			if( t > 200 )
+< 				t = 200;
+< 			targ->client->ps.pm_time = t;
+< 			targ->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+< 		}
+< 	}
+---
+>   if( knockback && targ->client )
+>   {
+>     vec3_t  kvel;
+>     float   mass;
+> 
+>     mass = 200;
+> 
+>     // Halve knockback for bsuits
+>     if( targ->client &&
+>         targ->client->ps.stats[ STAT_PTEAM ] == PTE_HUMANS &&
+>         BG_InventoryContainsUpgrade( UP_BATTLESUIT, targ->client->ps.stats ) )
+>       mass += 400;
+> 
+>     // Halve knockback for crouching players
+>     if(targ->client->ps.pm_flags&PMF_DUCKED) knockback /= 2;
+> 
+>     VectorScale( dir, g_knockback.value * (float)knockback / mass, kvel );
+>     VectorAdd( targ->client->ps.velocity, kvel, targ->client->ps.velocity );
+> 
+>     // set the timer so that the other client can't cancel
+>     // out the movement immediately
+>     if( !targ->client->ps.pm_time )
+>     {
+>       int   t;
+> 
+>       t = knockback * 2;
+>       if( t < 50 )
+>         t = 50;
+> 
+>       if( t > 200 )
+>         t = 200;
+>       targ->client->ps.pm_time = t;
+>       targ->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+>     }
+>   }
+1674a1896,1897
+> 
+> 

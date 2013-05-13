@@ -1,0 +1,314 @@
+775c775,776
+<   Com_Printf( S_COLOR_YELLOW "WARNING: fallthrough in BG_FindModelScaleForBuildable( %d )\n", bclass );
+---
+>   Com_Printf( S_COLOR_YELLOW "WARNING: fallthrough in BG_FindModelScaleForBuildable( %d 
+> )\n", bclass );
+1380c1381,1382
+< static qboolean BG_ParseBuildableFile( const char *filename, buildableAttributeOverrides_t *bao )
+---
+> static qboolean BG_ParseBuildableFile( const char *filename, 
+> buildableAttributeOverrides_t *bao )
+1393c1395
+<   if( len < 0 )
+---
+>   if( len <= 0 )
+1396c1398
+<   if( len == 0 || len >= sizeof( text ) - 1 )
+---
+>   if( len >= sizeof( text ) - 1 )
+1398,1400c1400
+<     trap_FS_FCloseFile( f );
+<     Com_Printf( S_COLOR_RED "ERROR: Buildable file %s is %s\n", filename,
+<       len == 0 ? "empty" : "too long" );
+---
+>     Com_Printf( S_COLOR_RED "ERROR: Buildable file %s too long\n", filename );
+1525c1525,1526
+<     BG_ParseBuildableFile( va( "overrides/buildables/%s.cfg", BG_FindNameForBuildable( i ) ), bao );
+---
+>     BG_ParseBuildableFile( va( "overrides/buildables/%s.cfg", BG_FindNameForBuildable( i 
+> ) ), bao );
+1549c1550,1551
+<     0, 0,                                           //int     viewheight, crouchviewheight;
+---
+>     0, 0,                                           //int     viewheight, 
+> crouchviewheight;
+1587c1589,1590
+<     0, 0,                                           //int     viewheight, crouchviewheight;
+---
+>     0, 0,                                           //int     viewheight, 
+> crouchviewheight;
+1605c1608,1609
+<     { PCL_ALIEN_BUILDER0_UPG, PCL_ALIEN_LEVEL0, PCL_NONE },       //int     children[ 3 ];
+---
+>     { PCL_ALIEN_BUILDER0_UPG, PCL_ALIEN_LEVEL0, PCL_NONE },       //int     children[ 3 
+> ];
+1625c1629,1630
+<     0, 0,                                           //int     viewheight, crouchviewheight;
+---
+>     0, 0,                                           //int     viewheight, 
+> crouchviewheight;
+1663c1668,1669
+<     0, 0,                                           //int     viewheight, crouchviewheight;
+---
+>     0, 0,                                           //int     viewheight, 
+> crouchviewheight;
+1702c1708,1709
+<     0, 0,                                           //int     viewheight, crouchviewheight;
+---
+>     0, 0,                                           //int     viewheight, 
+> crouchviewheight;
+1741c1748,1749
+<     0, 0,                                           //int     viewheight, crouchviewheight;
+---
+>     0, 0,                                           //int     viewheight, 
+> crouchviewheight;
+1780c1788,1789
+<     10, 10,                                         //int     viewheight, crouchviewheight;
+---
+>     10, 10,                                         //int     viewheight, 
+> crouchviewheight;
+1819c1828,1829
+<     12, 12,                                         //int     viewheight, crouchviewheight;
+---
+>     12, 12,                                         //int     viewheight, 
+> crouchviewheight;
+1858c1868,1869
+<     24, 24,                                         //int     viewheight, crouchviewheight;
+---
+>     24, 24,                                         //int     viewheight, 
+> crouchviewheight;
+1897c1908,1909
+<     27, 27,                                         //int     viewheight, crouchviewheight;
+---
+>     27, 27,                                         //int     viewheight, 
+> crouchviewheight;
+1936c1948,1949
+<     35, 35,                                         //int     viewheight, crouchviewheight;
+---
+>     35, 35,                                         //int     viewheight, 
+> crouchviewheight;
+1975c1988,1989
+<     26, 12,                                         //int     viewheight, crouchviewheight;
+---
+>     26, 12,                                         //int     viewheight, 
+> crouchviewheight;
+1980c1994,1995
+<       SCA_CANUSELADDERS|SCA_WALLJUMPER,                            //int     abilities; Remove WALLjumper to remove walljump ability
+---
+>       SCA_CANUSELADDERS|SCA_WALLJUMPER,                            //int     abilities; 
+> Remove WALLjumper to remove walljump ability
+2014c2029,2030
+<     35, 35,                                         //int     viewheight, crouchviewheight;
+---
+>     35, 35,                                         //int     viewheight, 
+> crouchviewheight;
+2149c2165,2166
+<   Com_Printf( S_COLOR_YELLOW "WARNING: fallthrough in BG_FindModelScaleForClass( %d )\n", pclass );
+---
+>   Com_Printf( S_COLOR_YELLOW "WARNING: fallthrough in BG_FindModelScaleForClass( %d )\n", 
+> pclass );
+2196c2213,2214
+<   Com_Printf( S_COLOR_YELLOW "WARNING: fallthrough in BG_FindShadowScaleForClass( %d )\n", pclass );
+---
+>   Com_Printf( S_COLOR_YELLOW "WARNING: fallthrough in BG_FindShadowScaleForClass( %d 
+> )\n", pclass );
+2252c2270,2271
+< void BG_FindBBoxForClass( int pclass, vec3_t mins, vec3_t maxs, vec3_t cmaxs, vec3_t dmins, vec3_t dmaxs )
+---
+> void BG_FindBBoxForClass( int pclass, vec3_t mins, vec3_t maxs, vec3_t cmaxs, vec3_t 
+> dmins, vec3_t dmaxs )
+2567c2586,2587
+<   Com_Printf( S_COLOR_YELLOW "WARNING: fallthrough in BG_FindAirAccelerationForClass\n" );
+---
+>   Com_Printf( S_COLOR_YELLOW "WARNING: fallthrough in BG_FindAirAccelerationForClass\n" 
+> );
+2854c2874
+<   if( len < 0 )
+---
+>   if( len <= 0 )
+2857c2877
+<   if( len == 0 || len >= sizeof( text ) - 1 )
+---
+>   if( len >= sizeof( text ) - 1 )
+2859,2861c2879
+<     trap_FS_FCloseFile( f );
+<     Com_Printf( S_COLOR_RED "ERROR: Class file %s is %s\n", filename,
+<       len == 0 ? "empty" : "too long" );
+---
+>     Com_Printf( S_COLOR_RED "ERROR: Class file %s too long\n", filename );
+3069c3087,3088
+<     BG_ParseClassFile( va( "overrides/classes/%s.cfg", BG_FindNameForClassNum( i ) ), cao );
+---
+>     BG_ParseClassFile( va( "overrides/classes/%s.cfg", BG_FindNameForClassNum( i ) ), cao 
+> );
+3112c3131
+<     qtrue,               //int       usesEnergy;
+---
+>     qfalse,               //int       usesEnergy;
+3137c3156
+<     qtrue,               //int       usesEnergy;
+---
+>     qfalse,               //int       usesEnergy;
+3187c3206
+<     qtrue,               //int       usesEnergy;
+---
+>     qfalse,               //int       usesEnergy;
+3644c3663
+<     qtrue,               //qboolean  hasThirdMode;
+---
+>     qfalse,               //qboolean  hasThirdMode;
+3757a3777,3797
+> BG_UpdateWeaponData
+> ==============
+> */
+> void BG_UpdateWeaponData(int proximityMine, int price) {
+> 	int i;
+> 	
+> 	for(i=0; i<bg_numWeapons; i++) {
+> 		if(bg_weapons[i].weaponNum == WP_GRENADE) {
+> 			if(proximityMine) {
+> 				bg_weapons[i].price = price;
+> 			} else {
+> 				bg_weapons[i].price = GRENADE_PRICE;
+> 			}
+> 		}
+> 	}
+> 	
+> 	return;
+> }
+> 
+> /*
+> ==============
+4299a4340,4359
+> BG_UpdateUpgradeData
+> ==============
+> */
+> void BG_UpdateUpgradeData(int proximityMine, int price) {
+> 	int i;
+> 	
+> 	for(i=0; i<bg_numUpgrades; i++) {
+> 		if(bg_upgrades[i].upgradeNum == UP_GRENADE) {
+> 			if(proximityMine) {
+> 				bg_upgrades[i].price = price;
+> 			} else {
+> 				bg_upgrades[i].price = GRENADE_PRICE;
+> 			}
+> 		}
+> 	}
+> 	return;
+> }
+> 
+> /*
+> ==============
+4538c4598,4599
+<       result[ 2 ] -= 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;   // FIXME: local gravity...
+---
+>       result[ 2 ] -= 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;   // FIXME: local 
+> gravity...
+4544c4605,4606
+<       result[ 2 ] += 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;   // FIXME: local gravity...
+---
+>       result[ 2 ] += 0.5 * DEFAULT_GRAVITY * deltaTime * deltaTime;   // FIXME: local 
+> gravity...
+4605c4667,4668
+<       Com_Error( ERR_DROP, "BG_EvaluateTrajectoryDelta: unknown trType: %i", tr->trTime );
+---
+>       Com_Error( ERR_DROP, "BG_EvaluateTrajectoryDelta: unknown trType: %i", tr->trTime 
+> );
+4717c4780,4781
+< void BG_AddPredictableEventToPlayerstate( int newEvent, int eventParm, playerState_t *ps )
+---
+> void BG_AddPredictableEventToPlayerstate( int newEvent, int eventParm, playerState_t *ps 
+> )
+4728c4792,4793
+<                   ps->pmove_framecount/*ps->commandTime*/, ps->eventSequence, eventnames[ newEvent ], eventParm);
+---
+>                   ps->pmove_framecount/*ps->commandTime*/, ps->eventSequence, eventnames[ 
+> newEvent ], eventParm);
+4731c4796,4797
+<                   ps->pmove_framecount/*ps->commandTime*/, ps->eventSequence, eventnames[ newEvent ], eventParm);
+---
+>                   ps->pmove_framecount/*ps->commandTime*/, ps->eventSequence, eventnames[ 
+> newEvent ], eventParm);
+4754c4820,4821
+<   if( ps->pm_type == PM_INTERMISSION || ps->pm_type == PM_SPECTATOR || ps->pm_type == PM_FREEZE )
+---
+>   if( ps->pm_type == PM_INTERMISSION || ps->pm_type == PM_SPECTATOR || ps->pm_type == 
+> PM_FREEZE )
+4857c4924,4925
+< void BG_PlayerStateToEntityStateExtraPolate( playerState_t *ps, entityState_t *s, int time, qboolean snap )
+---
+> void BG_PlayerStateToEntityStateExtraPolate( playerState_t *ps, entityState_t *s, int 
+> time, qboolean snap )
+4861c4929,4930
+<   if( ps->pm_type == PM_INTERMISSION || ps->pm_type == PM_SPECTATOR || ps->pm_type == PM_FREEZE )
+---
+>   if( ps->pm_type == PM_INTERMISSION || ps->pm_type == PM_SPECTATOR || ps->pm_type == 
+> PM_FREEZE )
+4967c5036,5037
+< void BG_UnpackAmmoArray( int weapon, int psAmmo[ ], int psAmmo2[ ], int *ammo, int *clips )
+---
+> void BG_UnpackAmmoArray( int weapon, int psAmmo[ ], int psAmmo2[ ], int *ammo, int *clips 
+> )
+5036c5106,5107
+<   weaponList = ( stats[ STAT_WEAPONS ] & 0x0000FFFF ) | ( ( stats[ STAT_WEAPONS2 ] << 16 ) & 0xFFFF0000 );
+---
+>   weaponList = ( stats[ STAT_WEAPONS ] & 0x0000FFFF ) | ( ( stats[ STAT_WEAPONS2 ] << 16 
+> ) & 0xFFFF0000 );
+5060c5131,5132
+<   weaponList = ( stats[ STAT_WEAPONS ] & 0x0000FFFF ) | ( ( stats[ STAT_WEAPONS2 ] << 16 ) & 0xFFFF0000 );
+---
+>   weaponList = ( stats[ STAT_WEAPONS ] & 0x0000FFFF ) | ( ( stats[ STAT_WEAPONS2 ] << 16 
+> ) & 0xFFFF0000 );
+5081c5153,5154
+<   weaponList = ( stats[ STAT_WEAPONS ] & 0x0000FFFF ) | ( ( stats[ STAT_WEAPONS2 ] << 16 ) & 0xFFFF0000 );
+---
+>   weaponList = ( stats[ STAT_WEAPONS ] & 0x0000FFFF ) | ( ( stats[ STAT_WEAPONS2 ] << 16 
+> ) & 0xFFFF0000 );
+5204c5277,5278
+<     //hmmm could get away with only one rotation and some clever stuff later... but i'm lazy
+---
+>     //hmmm could get away with only one rotation and some clever stuff later... but i'm 
+> lazy
+5224,5226c5298,5303
+<                                            void (*trace)( trace_t *, const vec3_t, const vec3_t,
+<                                                           const vec3_t, const vec3_t, int, int ),
+<                                            vec3_t outOrigin, vec3_t outAngles, trace_t *tr )
+---
+>                                            void (*trace)( trace_t *, const vec3_t, const 
+> vec3_t,
+>                                                           const vec3_t, const vec3_t, 
+> int, int ),
+>                                            vec3_t outOrigin, vec3_t outAngles, trace_t 
+> *tr )
+5260c5337
+<   (*trace)( tr, entityOrigin, mins, maxs, targetOrigin, ps->clientNum, MASK_PLAYERSOLID );
+---
+>   (*trace)( tr, entityOrigin, mins, maxs, targetOrigin, ps->clientNum, MASK_DEADSOLID );
+5468c5545,5546
+< void BG_ParseCSVBuildableList( const char *string, buildable_t *buildables, int buildablesSize )
+---
+> void BG_ParseCSVBuildableList( const char *string, buildable_t *buildables, int 
+> buildablesSize )
+5494c5572
+<     buildables[ i ] = BG_FindBuildNumForName( q );
+---
+>     buildables[ i ] = BG_FindClassNumForName( q );
+5776c5854,5856
+< 		if( modEntry[ MOD_BG_TURRET_ANGLE ] ) 
+---
+>     if( modEntry[ MOD_BG_TURRET_ANGLE ] ) /*&&
+>       ( bg_buildableList[ i ].buildNum == BA_H_MGTURRET ||
+>         bg_buildableList[ i ].buildNum == BA_H_TESLAGEN )*/
+5836c5916,5917
+< 		   ( bg_weapons[ i ].weaponNum == WP_ABUILD || bg_weapons[ i ].weaponNum == WP_ABUILD2 ) )
+---
+>       ( bg_weapons[ i ].weaponNum == WP_ABUILD || bg_weapons[ i ].weaponNum == WP_ABUILD2 
+> ) )
+5848c5929,5930
+< 		   ( bg_weapons[ i ].weaponNum == WP_HBUILD || bg_weapons[ i ].weaponNum == WP_HBUILD2 ) )
+---
+>       ( bg_weapons[ i ].weaponNum == WP_HBUILD || bg_weapons[ i ].weaponNum == WP_HBUILD2 
+> ) )
+5865a5948
+> 

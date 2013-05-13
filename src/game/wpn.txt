@@ -1,0 +1,183 @@
+68,71d67
+<     // Lak: The following hack has been moved to PM_BeginWeaponChange, but I'm going to
+<     // redundantly leave it here as well just in case there's a case I'm forgetting
+<     // because I don't want to face the gameplay consequences such an error would have
+< 
+104c100
+<       if( buyingEnergyAmmo )
+---
+>       if( 1 )
+142,190d137
+< ================
+< G_WideTrace
+< 
+< Trace a bounding box against entities, but not the world
+< Also check there is a line of sight between the start and end point
+< ================
+< */
+< static void G_WideTrace( trace_t *tr, gentity_t *ent, float range, float width, gentity_t **target )
+< {
+<   vec3_t    mins, maxs;
+<   vec3_t    end;
+< 
+<   VectorSet( mins, -width, -width, -width );
+<   VectorSet( maxs, width, width, width );
+< 
+<   *target = NULL;
+< 
+<   if( !ent->client )
+<     return;
+< 
+<   // Set aiming directions
+<   AngleVectors( ent->client->ps.viewangles, forward, right, up );
+<   CalcMuzzlePoint( ent, forward, right, up, muzzle );
+<   VectorMA( muzzle, range, forward, end );
+< 
+<   G_UnlaggedOn( ent, muzzle, range );
+< 
+<   // Trace against entities
+<   trap_Trace( tr, muzzle, mins, maxs, end, ent->s.number, CONTENTS_BODY );
+<   if( tr->entityNum != ENTITYNUM_NONE )
+<   {
+<     *target = &g_entities[ tr->entityNum ];
+< 
+<     // Set range to the trace length plus the width, so that the end of the
+<     // LOS trace is close to the exterior of the target's bounding box
+<     range = Distance( muzzle, tr->endpos ) + width;
+<     VectorMA( muzzle, range, forward, end );
+< 
+<     // Trace for line of sight against the world
+<     trap_Trace( tr, muzzle, NULL, NULL, end, 0, CONTENTS_SOLID );
+<     if( tr->fraction < 1.0f )
+<       *target = NULL;
+<   }
+< 
+<   G_UnlaggedOff( );
+< }
+< 
+< 
+< /*
+236c183
+<   G_UnlaggedOn( ent, muzzle, range );
+---
+>   G_UnlaggedOn( muzzle, range );
+286c233
+<     G_UnlaggedOn( ent, muzzle, 8192 * 16 );
+---
+>     G_UnlaggedOn( muzzle, 8192 * 16 );
+377c324
+<   G_UnlaggedOn( ent, muzzle, 8192 * 16 );
+---
+>   G_UnlaggedOn( muzzle, 8192 * 16 );
+399c346
+<   G_UnlaggedOn( ent, muzzle, 8192 * 16 );
+---
+>   G_UnlaggedOn( muzzle, 8192 * 16 );
+555c502
+<   G_UnlaggedOn( ent, muzzle, 8192 * 16 );
+---
+>   G_UnlaggedOn( muzzle, 8192 * 16 );
+610c557
+<   G_UnlaggedOn( ent, muzzle, PAINSAW_RANGE );
+---
+>   G_UnlaggedOn( muzzle, PAINSAW_RANGE );
+704c651,652
+<   if( traceEnt->client && traceEnt->client->ps.stats[ STAT_PTEAM ] != PTE_ALIENS )
+---
+>   if( traceEnt->client && traceEnt->client->ps.stats[ STAT_PTEAM ] != PTE_ALIENS &&
+>      !traceEnt->client->pers.bleeder )
+817c765
+<       if( g_cheats.integer )
+---
+>       if( g_cheats.integer || g_instantBuild.integer )
+890c838
+<   G_UnlaggedOn( ent, muzzle, LEVEL0_BITE_RANGE );
+---
+>   G_UnlaggedOn( muzzle, LEVEL0_BITE_RANGE );
+1026c974
+<   G_UnlaggedOn( ent, ent->client->ps.origin, LEVEL1_PCLOUD_RANGE );
+---
+>   G_UnlaggedOn( ent->client->ps.origin, LEVEL1_PCLOUD_RANGE );
+1186a1135,1136
+>       if( g_modAlienRate.integer > 0 )
+>         zap->timeToLive = zap->timeToLive * g_modAlienRate.integer / 100;
+1279a1230,1231
+>             if( g_modAlienRate.integer > 0 )
+>               damage = damage * 100 / g_modAlienRate.integer;
+1320c1272
+<   G_UnlaggedOn( ent, muzzle, LEVEL2_AREAZAP_RANGE );
+---
+>   G_UnlaggedOn( muzzle, LEVEL2_AREAZAP_RANGE );
+1353a1306
+>   vec3_t    end;
+1356a1310,1313
+>   vec3_t    mins, maxs;
+> 
+>   VectorSet( mins, -LEVEL3_POUNCE_WIDTH, -LEVEL3_POUNCE_WIDTH, -LEVEL3_POUNCE_WIDTH );
+>   VectorSet( maxs, LEVEL3_POUNCE_WIDTH, LEVEL3_POUNCE_WIDTH, LEVEL3_POUNCE_WIDTH );
+1370c1327,1332
+<   G_WideTrace( &tr, ent, LEVEL3_POUNCE_RANGE, LEVEL3_POUNCE_WIDTH, &traceEnt );
+---
+>   // set aiming directions
+>   AngleVectors( ent->client->ps.viewangles, forward, right, up );
+> 
+>   CalcMuzzlePoint( ent, forward, right, up, muzzle );
+> 
+>   VectorMA( muzzle, LEVEL3_POUNCE_RANGE, forward, end );
+1372c1334,1342
+<   if( traceEnt == NULL )
+---
+>   G_UnlaggedOn( muzzle, LEVEL3_POUNCE_RANGE );
+>   trap_Trace( &tr, muzzle, mins, maxs, end, ent->s.number, MASK_SHOT );
+>   G_UnlaggedOff( );
+> 
+>   //miss
+>   if( tr.fraction >= 1.0 )
+>     return qfalse;
+> 
+>   if( tr.surfaceFlags & SURF_NOIMPACT )
+1374a1345,1346
+>   traceEnt = &g_entities[ tr.entityNum ];
+> 
+1481,1483c1453,1455
+< 		    PM_AddEvent( EV_NOAMMO );
+< 		ent->client->ps.weaponTime += 200;
+< 		    trap_SendServerCommand( ent-g_entities, va(
+---
+> 			PM_AddEvent( EV_NOAMMO );
+>       ent->client->ps.weaponTime += 200;
+> 			trap_SendServerCommand( ent-g_entities, va(
+1485c1457
+< 		return qtrue;
+---
+> 			return qtrue;
+1488,1496c1460,1468
+< 		"print \"^1Nade Dropped\n\"" ) );
+< 	   //G_TeamCommand( PTE_HUMANS, "cp \"^1Alien Nuke Detected\" 1");
+< 	   ent->s.weapon = WP_GRENADE;
+< 	   //G_AddPredictableEvent( ent, EV_ALIEN_EVOLVE, 0 );
+< 	
+< 	   FireWeapon( ent );
+< 	   ent->client->ps.persistant[ PERS_CREDIT ] = 0;
+< 	   ent->client->ps.stats[ STAT_HEALTH ] = ent->health = 0;
+< 	   return qtrue;
+---
+>         "print \"^1Nade Dropped\n\"" ) );
+> 		//G_TeamCommand( PTE_HUMANS, "cp \"^1Alien Nuke Detected\" 1");
+> 		ent->s.weapon = WP_GRENADE;
+> 		//G_AddPredictableEvent( ent, EV_ALIEN_EVOLVE, 0 );
+> 		 
+> 		FireWeapon( ent );
+> 		ent->client->ps.persistant[ PERS_CREDIT ] = 0;
+> 		ent->client->ps.stats[ STAT_HEALTH ] = ent->health = 0;
+> 		return qtrue;
+1528c1500
+< 		  
+---
+> 		
+1599a1572,1574
+>   // paused
+>   if ( level.paused ) return;
+> 
+1680d1654
+< 

@@ -1,0 +1,82 @@
+37a38
+> 			G_Printf( "Call 38\n" );
+66a68
+> 			G_Printf( "Call 69 open\n" );
+67a70
+> 			G_Printf( "Call 69 close\n" );
+121d123
+< 			ent->client->pers.cantBeAllowbuilt = qtrue;
+134d135
+< 			ent->client->pers.cantBeUnmuted = qtrue;
+165c166
+< 
+---
+> 	if(ip[0] == '\0' || ip2[0] == '\0') return qfalse;// Not an ip	
+167,187c168,186
+< 	{
+< 		//3 first blocks match = /24
+< 		if (ipPosition == 4 && subnet == 2)
+< 		{
+< 			return qtrue;
+< 		}
+< 		//First two blocks match = subnet
+< 		if (ipPosition == 3 && subnet == 1)
+< 		{
+< 			return qtrue;
+< 		}
+< 		if (ip[i] == '.')
+< 		{
+< 			ipPosition++;
+< 			continue;
+< 		}
+< 		if (ip[i] != ip2[i])
+< 		{
+< 			return qfalse;
+< 		}
+< 	}
+---
+>         {
+>                 if(ip[i] == '.'){
+>                                 if(ip2[i] != '.')
+>                                         return qfalse;
+>                         ipPosition++;
+>                         if(ipPosition == 3 && subnet == 1)
+>                         {
+>                                 return qtrue;
+>                         }
+>                         if(ipPosition == 4 && subnet == 2)
+>                         {
+>                                 return qtrue;
+>                         }
+>                         continue;
+>                 }
+>                 //Checa las primeras posiciones hasta el punto, si es diferente, entonces termina
+>                 if(ip[i] != ip2[i]){
+>                         return qfalse;
+>                 }
+189,190c188
+< 	if(ip[0] == '\0' || ip2[0] == '\0')
+< 		return qfalse;
+---
+>         }
+201a200,201
+> G_Printf( "Call 202\n" );
+> 
+242c242
+< 	Q_strncpyz(temp->server, va("%s","x"), 2);
+---
+> 	Q_strncpyz(temp->server, va("%s","w"), 2);
+253c253
+< 		" VALUES (\"%d\",\"%d\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%d\",\"%d\",\"x\") ", (G_isPlayerConnected(victimEnt)
+---
+> 		" VALUES (\"%d\",\"%d\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%d\",\"%d\",\"w\") ", (G_isPlayerConnected(victimEnt)
+600,604d599
+< 	G_WebLogPrintf("%s %s %s reason: %s, ID: #%d\n", (G_isPlayerConnected(vic))
+< 			? vic->client->pers.netname
+< 			: who, action, (G_isPlayerConnected(ent))
+< 			? ent->client->pers.netname
+< 			: "console", (*reason) ? reason : "not specified", globalID);
+653d647
+< 			vic->client->pers.cantBeAllowbuilt = qtrue;
+663d656
+< 			vic->client->pers.cantBeUnmuted = qtrue;

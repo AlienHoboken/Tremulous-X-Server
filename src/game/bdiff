@@ -1,0 +1,114 @@
+1393c1393
+<   if( len < 0 )
+---
+>   if( len <= 0 )
+1396c1396
+<   if( len == 0 || len >= sizeof( text ) - 1 )
+---
+>   if( len >= sizeof( text ) - 1 )
+1398,1400c1398
+<     trap_FS_FCloseFile( f );
+<     Com_Printf( S_COLOR_RED "ERROR: Buildable file %s is %s\n", filename,
+<       len == 0 ? "empty" : "too long" );
+---
+>     Com_Printf( S_COLOR_RED "ERROR: Buildable file %s too long\n", filename );
+1980c1978,1979
+<       SCA_CANUSELADDERS|SCA_WALLJUMPER,                            //int     abilities; Remove WALLjumper to remove walljump ability
+---
+>       SCA_CANUSELADDERS|SCA_WALLJUMPER,                            //int     abilities; Remove WALLjumper to 
+> remove walljump ability
+2854c2853
+<   if( len < 0 )
+---
+>   if( len <= 0 )
+2857c2856
+<   if( len == 0 || len >= sizeof( text ) - 1 )
+---
+>   if( len >= sizeof( text ) - 1 )
+2859,2861c2858
+<     trap_FS_FCloseFile( f );
+<     Com_Printf( S_COLOR_RED "ERROR: Class file %s is %s\n", filename,
+<       len == 0 ? "empty" : "too long" );
+---
+>     Com_Printf( S_COLOR_RED "ERROR: Class file %s too long\n", filename );
+3112c3109
+<     qtrue,               //int       usesEnergy;
+---
+>     qfalse,               //int       usesEnergy;
+3137c3134
+<     qtrue,               //int       usesEnergy;
+---
+>     qfalse,               //int       usesEnergy;
+3187c3184
+<     qtrue,               //int       usesEnergy;
+---
+>     qfalse,               //int       usesEnergy;
+3644c3641
+<     qtrue,               //qboolean  hasThirdMode;
+---
+>     qfalse,               //qboolean  hasThirdMode;
+3757a3755,3775
+> BG_UpdateWeaponData
+> ==============
+> */
+> void BG_UpdateWeaponData(int proximityMine, int price) {
+> 	int i;
+> 	
+> 	for(i=0; i<bg_numWeapons; i++) {
+> 		if(bg_weapons[i].weaponNum == WP_GRENADE) {
+> 			if(proximityMine) {
+> 				bg_weapons[i].price = price;
+> 			} else {
+> 				bg_weapons[i].price = GRENADE_PRICE;
+> 			}
+> 		}
+> 	}
+> 	
+> 	return;
+> }
+> 
+> /*
+> ==============
+4299a4318,4337
+> BG_UpdateUpgradeData
+> ==============
+> */
+> void BG_UpdateUpgradeData(int proximityMine, int price) {
+> 	int i;
+> 	
+> 	for(i=0; i<bg_numUpgrades; i++) {
+> 		if(bg_upgrades[i].upgradeNum == UP_GRENADE) {
+> 			if(proximityMine) {
+> 				bg_upgrades[i].price = price;
+> 			} else {
+> 				bg_upgrades[i].price = GRENADE_PRICE;
+> 			}
+> 		}
+> 	}
+> 	return;
+> }
+> 
+> /*
+> ==============
+4728c4766,4767
+<                   ps->pmove_framecount/*ps->commandTime*/, ps->eventSequence, eventnames[ newEvent ], eventParm);
+---
+>                   ps->pmove_framecount/*ps->commandTime*/, ps->eventSequence, eventnames[ newEvent ], 
+> eventParm);
+4731c4770,4771
+<                   ps->pmove_framecount/*ps->commandTime*/, ps->eventSequence, eventnames[ newEvent ], eventParm);
+---
+>                   ps->pmove_framecount/*ps->commandTime*/, ps->eventSequence, eventnames[ newEvent ], 
+> eventParm);
+5494c5534
+<     buildables[ i ] = BG_FindBuildNumForName( q );
+---
+>     buildables[ i ] = BG_FindClassNumForName( q );
+5776c5816,5818
+< 		if( modEntry[ MOD_BG_TURRET_ANGLE ] ) 
+---
+>     if( modEntry[ MOD_BG_TURRET_ANGLE ] ) /*&&
+>       ( bg_buildableList[ i ].buildNum == BA_H_MGTURRET ||
+>         bg_buildableList[ i ].buildNum == BA_H_TESLAGEN )*/
+5865a5908
+> 

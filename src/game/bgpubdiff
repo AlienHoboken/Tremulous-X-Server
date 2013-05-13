@@ -1,0 +1,66 @@
+66c66,67
+< #define CS_INTERMISSION     22    // when 1, fraglimit/timelimit has been hit and intermission will start in a second or two
+---
+> #define CS_INTERMISSION     22    // when 1, fraglimit/timelimit has been hit and intermission will start in 
+> a second or two
+70c71,72
+< #define CS_CLIENTS_READY    26    //TA: following suggestion in STAT_ enum STAT_CLIENTS_READY becomes a configstring
+---
+> #define CS_CLIENTS_READY    26    //TA: following suggestion in STAT_ enum STAT_CLIENTS_READY becomes a 
+> configstring
+189c191,192
+<   /*void    (*trace)( trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, int passEntityNum, int contentMask );*/
+---
+>   /*void    (*trace)( trace_t *results, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, int 
+> passEntityNum, int contentMask );*/
+260c263
+<   PERS_UNUSED,          // used to be PERS_RANK, no longer used
+---
+>   PERS_RANK,
+895a899
+>   MOD_RADIATION,
+896a901
+>   MOD_EXPLODE
+1180c1185,1186
+< void      BG_FindBBoxForClass( int pclass, vec3_t mins, vec3_t maxs, vec3_t cmaxs, vec3_t dmins, vec3_t dmaxs );
+---
+> void      BG_FindBBoxForClass( int pclass, vec3_t mins, vec3_t maxs, vec3_t cmaxs, vec3_t dmins, vec3_t 
+> dmaxs );
+1292c1298,1299
+< void  BG_PlayerStateToEntityStateExtraPolate( playerState_t *ps, entityState_t *s, int time, qboolean snap );
+---
+> void  BG_PlayerStateToEntityStateExtraPolate( playerState_t *ps, entityState_t *s, int time, qboolean snap 
+> );
+1327a1335,1337
+> void BG_UpdateWeaponData(int proximityMine, int price);
+> void BG_UpdateUpgradeData(int proximityMine, int price);
+> 
+1332a1343
+> // value mods equal to g_mod cvars on server
+1335,1345c1346,1356
+< 	MOD_BG_BUILDABLE_HEALTH,  // Buildable health
+< 	MOD_BG_BUILDABLE_SPEED,   // Buildable fire rate
+< 	MOD_BG_HUMAN_STAMINA,     // Human stamina
+< 	MOD_BG_HUMAN_HEALTH,      // Human health
+< 	MOD_BG_ALIEN_HEALTH,      // Alien health
+< 	MOD_BG_HUMAN_RATE,        // Human fire rate
+< 	MOD_BG_ALIEN_RATE,        // Alien fire rate
+< 	MOD_BG_WEAPON_AMMO,       // Weapon ammo per clip
+< 	MOD_BG_WEAPON_RELOAD,     // Weapon reload time
+< 	MOD_BG_TURRET_ANGLE,      // Allow high turret build angles
+< 	MOD_BG_COUNT              // number of entries
+---
+>   MOD_BG_BUILDABLE_HEALTH,  // Buildable health
+>   MOD_BG_BUILDABLE_SPEED,   // Buildable fire rate
+>   MOD_BG_HUMAN_STAMINA,     // Human stamina
+>   MOD_BG_HUMAN_HEALTH,      // Human health
+>   MOD_BG_ALIEN_HEALTH,      // Alien health
+>   MOD_BG_HUMAN_RATE,        // Human fire rate
+>   MOD_BG_ALIEN_RATE,        // Alien fire rate
+>   MOD_BG_WEAPON_AMMO,       // Weapon ammo per clip
+>   MOD_BG_WEAPON_RELOAD,     // Weapon reload time
+>   MOD_BG_TURRET_ANGLE,      // Allow high turret build angles
+>   MOD_BG_COUNT              // number of entries
+1350a1362,1363
+> 
+> 
