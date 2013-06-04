@@ -93,7 +93,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../game/bg_lib.h"
 
 #else
-
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
@@ -103,7 +102,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <time.h>
 #include <ctype.h>
 #include <limits.h>
-
+//webconsole
+#include <sys/types.h>
 #endif
 
 #include "q_platform.h"

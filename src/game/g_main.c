@@ -415,7 +415,6 @@ void G_InitGame( int levelTime, int randomSeed, int restart );
 void G_RunFrame( int levelTime );
 void G_ShutdownGame( int restart );
 void CheckExitRules( void );
-void AdvanceWebQuery( void );
 
 void G_CountSpawns( void );
 void G_CalculateBuildPoints( void );
@@ -835,7 +834,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
   // globals initilization
   trap_mysql_reconnect();
   G_globalInit();
-	
+
   //TA:
   BG_InitClassOverrides( );
   BG_InitBuildableOverrides( );
@@ -902,8 +901,6 @@ void G_ShutdownGame( int restart )
   // in case of a map_restart
   G_ClearVotes( );
 
-	G_LogPrintf( "\n\nTesting!!!\n\n");
-			  
   G_Printf( "==== ShutdownGame ====\n" );
 
   if( level.logFile )
@@ -1967,8 +1964,12 @@ void QDECL G_LogPrintf( const char *fmt, ... )
   vsprintf( string +7 , fmt,argptr );
   va_end( argptr );
 
-  if( g_dedicated.integer )
+  if( g_dedicated.integer ) {
     G_Printf( "%s", string + 7 );
+    //webconsole
+//    G_Printf( "(1): %s", string + 7);
+    //trap_webconsole_send( string + 7);
+  }
 
   if( !level.logFile )
     return;
@@ -2437,129 +2438,6 @@ void CheckExitRules( void )
     trap_SetConfigstring( CS_WINNER, "Aliens Win" );
     LogExit( "Aliens win." );
     G_admin_maplog_result( "a" );
-  }
-}
-
-/*
-============================
-AdvanceWebQuery
-
-This advances one query per frame.
-============================
-*/
-
-void AdvanceWebQuery( void ) {
-  int id = level.webQueryTracker;
-  char data[255];
-  char text[255];
-  char guid[33];
-  char queryip[50];
-  char queryname[50];
-  char* playername;
-  int querytype, adminlevel;
-  gentity_t *tempent;
-  int j;
-
-  if( level.webQueryFrameCount < g_webQueryFrames.integer) {
-	level.webQueryFrameCount++;
-	return;
-  } else {
-	level.webQueryFrameCount = 0;
-  }
-
-  if(id < 9999) {
-    if (trap_mysql_runquery(va("SELECT HIGH_PRIORITY * FROM xQueries WHERE id=%d", id))
-				== qtrue) {
-        if (trap_mysql_fetchrow() == qtrue) {
-          trap_mysql_fetchfieldbyName("query", text, sizeof(text));
-	  trap_mysql_fetchfieldbyName("GUID", guid, sizeof(guid));
-	  trap_mysql_fetchfieldbyName("queryname", queryname, sizeof(queryname));
-	  trap_mysql_fetchfieldbyName("queryip", queryip, sizeof(queryip));
-	  trap_mysql_fetchfieldbyName("querytype", data, sizeof(data));
-	  querytype = atoi(data);
-          trap_mysql_finishquery();
-         
-	  if(querytype == 1) //if connect query
-	  {
-	
-	     adminlevel = G_admin_weblevel(guid);
-	     playername = G_admin_webname(guid);	
-             if(trap_mysql_runquery(va("INSERT INTO xResponses (response, GUID, playername, adminlevel, responsetype) VALUES('connect','%s','%s','%d','1')",
-		guid, playername, adminlevel)) == qtrue) {
-		trap_mysql_finishquery();
-	        G_LogPrintf( "webConnect: %s^7 (%s) from %s^7\n", queryname, guid, queryip);
-
-	     } else {
-                trap_mysql_finishquery();
-	     }
-	    level.webQueryTracker++;
-	    return;
-	  }
-
-
-	  if(querytype == 2) //if say query
-	  {
-	     trap_SendServerCommand( -1, va( "print \"^7[^5W^7] %s:^2 %s^7\n\"", queryname, text ) );
-	     G_LogPrintf( "[W]%s^7: ^2%s^7\n", queryname, text );
-	     G_WebLogPrintf( "%s^7: ^2%s^7\n", queryname, text );
-	     level.webQueryTracker++;
-	     return;
-	  }
-
-          if(querytype == 3) //if admin query
-          {
-	    for( j = 0; j < level.maxclients; j++ )
-  	    {
-              tempent = &g_entities[ j ];
-	      if( G_admin_permission( tempent, ADMF_ADMINCHAT) &&
-		     	 !tempent->client->pers.ignoreAdminWarnings ) 
-    	      {
-       		 if(adminlevel >= 3)
-		    trap_SendServerCommand(tempent-g_entities,va( "print \"^7[^5W^7] [ADMIN]%s^7: ^6%s^7\n\"", queryname, text) ); 
-	         else
-		    trap_SendServerCommand(tempent-g_entities,va( "print \"^7[^5W^7] [PLAYER]%s^7: ^6%s^7\n\"", queryname, text) ); 
-	      }
-  	    }
-    
-            if(adminlevel >= 3) {
-               G_LogPrintf( "say_admins: [ADMIN]%s^7: %s^7\n", queryname, text);
-               G_WebLogPrintf( "[ADMIN]%s^7: ^6%s^7\n", queryname, text);
-            } else {
-               G_LogPrintf( "say_admins: [PLAYER]%s^7: %s^7\n", queryname, text);
-               G_WebLogPrintf( "[PLAYER]%s^7: ^6%s^7\n", queryname, text);
-            }
-	    level.webQueryTracker++;
-	    return;
-          }
-
-          if(querytype == 4) //if dev query
-          {
-            for( j = 0; j < level.maxclients; j++ )
-            {
-              tempent = &g_entities[ j ];
-              if( G_admin_permission( tempent, ADMF_DEVCHAT) &&
-                         !tempent->client->pers.ignoreAdminWarnings )
-              {
-                 trap_SendServerCommand(tempent-g_entities,va( "print \"^7[^5W^7] [DEVS]%s^7: ^1%s^7\n\"", queryname, text) );
-              }
-            }
-	   
-//	    if(adminlevel >= 3) {
-               G_LogPrintf( "say_admins: [DEV]%s^7: %s^7\n", queryname, text);
-               G_WebLogPrintf( "[DEV]%s^7: ^1%s^7\n", queryname, text);
-//	    }
-    	    level.webQueryTracker++;
-	    return;
-	  }
-
-
-
-	} else {
-          trap_mysql_finishquery();
-	}
-    } else {
-          trap_mysql_finishquery();
-    }
   }
 }
 
@@ -3070,9 +2948,6 @@ void G_RunFrame( int levelTime )
 
   // see if it is time to end the level
   CheckExitRules( );
-
-  // do the next web query. One  run per fixed num. frames. herm
-  AdvanceWebQuery( );
 
   // update to team status?
   CheckTeamStatus( );

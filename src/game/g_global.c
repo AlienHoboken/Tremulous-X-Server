@@ -158,6 +158,7 @@ void G_applyGlobal(gentity_t *ent, global_t *global)
 		GLOBALS_URL));
 }
 
+/* OLD VERSION
 qboolean G_ipGlobalMatch(char *ip, char *ip2, qboolean subnet)
 {
 	int ipPosition = 1;
@@ -191,6 +192,39 @@ qboolean G_ipGlobalMatch(char *ip, char *ip2, qboolean subnet)
 
 	return qtrue;
 }
+*/
+
+qboolean G_ipGlobalMatch(char *ip, char *ip2, qboolean subnet)
+{
+        int ipPosition = 1;
+        int i;
+        if(ip[0] == '\0' || ip2[0] == '\0') return qfalse;// Not an ip
+        for (i = 0; ip[i] != '\0'; i++)
+        {
+                if(ip[i] == '.'){
+                                if(ip2[i] != '.')
+                                        return qfalse;
+                        ipPosition++;
+                        if(ipPosition == 3 && subnet == 1)
+                        {
+                                return qtrue;
+                        }
+                        if(ipPosition == 4 && subnet == 2)
+                        {
+                                return qtrue;
+                        }
+                        continue;
+                }
+                //Checa las primeras posiciones hasta el punto, si es diferente, entonces termina
+                if(ip[i] != ip2[i]){
+                        return qfalse;
+                }
+
+        }
+
+        return qtrue;
+}
+
 
 int G_globalAdd(gentity_t *adminEnt, gentity_t *victimEnt, char *guid, char *ip, char *playerName, char *reason, int subnet, char *date, globalType_t type)
 {

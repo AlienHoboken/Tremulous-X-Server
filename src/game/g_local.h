@@ -26,7 +26,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../qcommon/q_shared.h"
 #include "bg_public.h"
 #include "g_public.h"
-
 typedef struct gentity_s gentity_t;
 typedef struct gclient_s gclient_t;
 
@@ -1568,7 +1567,6 @@ qboolean G_adminWhitelistGlobal(gentity_t *ent, int skiparg);
 qboolean G_adminWhiteAdd(gentity_t *ent, int skiparg);
 qboolean G_deleteWhite(int id);
 
-
 //Mysql
 qboolean  trap_mysql_runquery( char *query );
 void      trap_mysql_finishquery( void );
@@ -1576,3 +1574,9 @@ qboolean  trap_mysql_fetchrow( void );
 void      trap_mysql_fetchfieldbyID( int id, char *buffer );
 void      trap_mysql_fetchfieldbyName( const char *name, char *buffer, int len );
 void      trap_mysql_reconnect(void);
+int trap_xglobal_load_c(char * path);
+unsigned char trap_xglobal_flags(char * ip);
+void trap_xglobal_free(void);
+
+//webconsole
+void      trap_webconsole_send( char *message );

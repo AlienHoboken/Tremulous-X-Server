@@ -58,6 +58,12 @@ equ trap_mysql_fetchfieldbyID       -53
 equ trap_mysql_fetchfieldbyName     -54
 equ trap_mysql_reconnect            -55
 
+equ trap_xglobal_load_c             -56
+equ trap_xglobal_flags              -57
+
+equ trap_webconsole_send            -58
+
+
 equ memset                          -101
 equ memcpy                          -102
 equ strncpy                         -103

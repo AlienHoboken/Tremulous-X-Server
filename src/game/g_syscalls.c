@@ -305,3 +305,24 @@ int trap_Parse_SourceFileAndLine( int handle, char *filename, int *line )
  void trap_mysql_fetchfieldbyName(const char *name, char *buffer, int len){
 	           syscall( G_SQL_FETCHFIELDBYNAME, name, buffer, len );
 	 }
+
+//mysql unsure
+/*int trap_xglobal_load_c(char * path)
+{
+        syscall(G_XGLOBAL_LOAD_C,path);
+}
+
+unsigned char trap_xglobal_flags(char * ip)
+{
+        syscall(G_XGLOBAL_FLAGS,ip);
+}
+
+void trap_xglobal_free(void)
+{
+        syscall(G_XGLOBAL_FREE);
+}*/
+
+//webconsole
+void trap_webconsole_send( char *message ) {
+      syscall( G_WEBCONSOLE_SEND, message );
+}

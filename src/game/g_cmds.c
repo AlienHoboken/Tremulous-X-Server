@@ -1049,6 +1049,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText )
   char        text[ MAX_SAY_TEXT ];
   char        location[ 64 ];
   const char *smtxt;
+
   // Bail if the text is blank.
   if( ! chatText[0] )
      return;
@@ -1093,6 +1094,8 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText )
     case SAY_ALL:
       G_LogPrintf( "say: %s^7: %s^7 %s\n", ent->client->pers.netname, chatText,smtxt );
       G_WebLogPrintf( "%s^7: ^2%s^7 ^2%s^7\n", ent->client->pers.netname, chatText,smtxt );
+      //webconsole
+      trap_webconsole_send( va("%s^7: ^2%s^7 ^2%s^7\n", ent->client->pers.netname, chatText,smtxt ));
       Com_sprintf( name, sizeof( name ), "%s%s%c%c"EC": ", prefix,ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
       color = COLOR_GREEN;
       break;
@@ -1100,6 +1103,9 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText )
     case SAY_TEAM:
       G_LogPrintf( "sayteam: %s%s^7: %s^7 %s\n", prefix, ent->client->pers.netname, chatText,smtxt );
       G_WebLogPrintf( "%s%s^7: ^5%s^7 ^5%s^7\n", prefix, ent->client->pers.netname, chatText,smtxt );      
+      //webconsole
+      trap_webconsole_send( va("%s%s^7: ^5%s^7 ^5%s^7\n", prefix, ent->client->pers.netname, chatText,smtxt ));
+
       if( Team_GetLocationMsg( ent, location, sizeof( location ) ) )
         Com_sprintf( name, sizeof( name ), EC"(%s%c%c"EC") (%s)"EC": ",ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, location );
       else
@@ -4311,7 +4317,7 @@ qboolean G_FollowNewClient( gentity_t *ent, int dir )
 	if( ent->client->pers.teamSelection != PTE_NONE )
 	{
 		trap_SendServerCommand( ent - g_entities, "print \"follow: You must be a spectator to do that. \n\"" );
-		return;
+		return qfalse;
 	}
 	
   if( dir > 1 )

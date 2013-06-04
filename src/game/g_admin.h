@@ -297,8 +297,8 @@ qboolean G_admin_check( gentity_t *ent, int skiparg );
 qboolean G_admin_hideme(gentity_t *ent, int skiparg );
 qboolean G_admin_cp_silent( gentity_t *ent, int skiparg);
 
-int G_admin_weblevel( char* guid);
-char* G_admin_webname( char* guid);
+//webconsole - new
+qboolean G_admin_web_register(gentity_t *ent, int skiparg );
 
 qboolean G_reconnectdb( gentity_t *ent, int skiparg );
 

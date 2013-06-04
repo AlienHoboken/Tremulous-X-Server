@@ -385,7 +385,7 @@ g_admin_cmd_t g_admin_cmds[ ] =
 		""
     },
     
-    {"pause", G_admin_pause, "S",
+    {"pause", G_admin_pause, "v",
 		"Pause (or unpause) the game.",
 		""
     },
@@ -565,7 +565,12 @@ g_admin_cmd_t g_admin_cmds[ ] =
 		"warn", G_admin_warn, "w",
 		"Warn a player to cease or face admin intervention",
 		"[^3name|slot#^7] [reason]"
+    },
+    {"webregister", G_admin_web_register, "R",
+                "Provides a code you can use to link your account to your forum account.",
+                ""
     }
+
 };
 
 static int adminNumCmds = sizeof( g_admin_cmds ) / sizeof( g_admin_cmds[ 0 ] );
@@ -1274,55 +1279,6 @@ int G_admin_level( gentity_t *ent )
 	return 0;
 }
 
-//return playerlevel for a web player
-int G_admin_weblevel( char* guid)
-{
-	int i;
-	qboolean found;
-	
-	for( i = 0; i < MAX_ADMIN_ADMINS && g_admin_admins[ i ]; i++ )
-	{
-		if( !Q_stricmp( g_admin_admins[ i ]->guid, guid ) )
-		{
-			found = qtrue;
-			break;
-		}
-	}
-	
-	if( found )
-	{
-		G_LogPrintf("\n%d\n", g_admin_admins[ i ]->level);
-		return g_admin_admins[ i ]->level;
-	} else {
-		return 0;
-	}
-}
-
-//return playername for a webplayer
-
-char* G_admin_webname( char* guid)
-{
-	int i;
-	qboolean found;
-	
-	for( i = 0; i < MAX_ADMIN_ADMINS && g_admin_admins[ i ]; i++ )
-	{
-		if( !Q_stricmp( g_admin_admins[ i ]->guid, guid ) )
-		{
-			found = qtrue;
-			break;
-		}
-	}
-	
-	if( found )
-	{
-		G_LogPrintf("\n%s\n", g_admin_admins[ i ]->name);
-		return g_admin_admins[ i ]->name;
-	} else {
-		return "unknown";
-	}
-	
-}
 //  set a player's adminname
 void G_admin_set_adminname( gentity_t *ent )
 {
@@ -9065,4 +9021,64 @@ qboolean G_admin_cp_silent( gentity_t *ent, int skiparg )
 	G_CP_Silent(ent);
 	return qtrue;
 	
+}
+
+// webconsole
+qboolean G_admin_web_register(gentity_t *ent, int skiparg ) {
+	int level, seed;
+	int t, i;
+	char auth_code[8];
+	float r;
+	//lookup table
+	const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	seed = t = trap_RealTime( NULL );
+	level = G_admin_level(ent);
+
+	if(level == 0) {
+		ADMP( "^3!webregister: ^7You are not ^3!register^7ed\n:" );
+		return qfalse;
+	}
+
+	//seed random
+	srand(seed);
+
+	//generate random code
+	for(i = 0; i < 7; i++) {
+		//generate a random ascii character (48 - 122)
+		auth_code[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+	}
+	auth_code[7] = 0; //terminate
+
+	//see if they are already webregistered
+	if(trap_mysql_runquery(va("SELECT * FROM xConsoleAuth WHERE guid='%s' AND authed=1", ent->client->pers.guid)) == qtrue) {
+		if(trap_mysql_fetchrow() == qtrue) {
+			ADMP( "^3!webregister: ^7You are already webregistered!\n" );
+			trap_mysql_finishquery();
+			return qtrue;
+		}
+	} else {
+		ADMP( "^3!webregister: ^7Sorry, something went wrong. Please report it on the forum!\n");
+		return qfalse;
+	}
+
+	//remove any possible lingering auths from this person
+	if (trap_mysql_runquery(va("DELETE FROM xConsoleAuth WHERE guid='%s'", ent->client->pers.guid)) == qtrue) {
+		trap_mysql_finishquery();
+
+		//insert an auth item for this user using a unix timestamp
+		if(trap_mysql_runquery(va("INSERT INTO xConsoleAuth (guid, authcode, time, authed) VALUES('%s', '%s', %d, 0)", ent->client->pers.guid, &auth_code, t)) == qtrue) {
+			ADMP( va("^3!webregister: ^7Please use code '%s'. Code is good for 5 minutes.\n", &auth_code));
+			trap_mysql_finishquery();
+			return qtrue;
+		} else {
+			ADMP( "^3!webregister: ^7Sorry, something went wrong. Please report it on the forum!\n");
+			return qfalse;
+		}
+	} else {
+		ADMP( "^3!webregister: ^7Sorry, something went wrong. Please report it on the forum!\n");
+		return qfalse;
+	}
 }

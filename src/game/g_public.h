@@ -230,7 +230,15 @@ typedef enum {
   G_SQL_FETCHROW,
   G_SQL_FETCHFIELDBYID,
   G_SQL_FETCHFIELDBYNAME,
-  G_SQL_RECONNECT
+  G_SQL_RECONNECT,
+
+  //global unsure
+  //G_XGLOBAL_LOAD_C,
+  //G_XGLOBAL_FLAGS,
+
+  //webconsole
+  G_WEBCONSOLE_SEND
+
 } gameImport_t;
 
 
