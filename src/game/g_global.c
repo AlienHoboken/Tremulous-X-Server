@@ -631,11 +631,6 @@ void G_globalPrintMsgForAdmins(gentity_t *ent, gentity_t *vic, int type, globalT
 			: who, action, (G_isPlayerConnected(ent))
 			? ent->client->pers.netname
 			: "console", (*reason) ? reason : "not specified", globalID);
-	G_WebLogPrintf("%s %s %s reason: %s, ID: #%d\n", (G_isPlayerConnected(vic))
-			? vic->client->pers.netname
-			: who, action, (G_isPlayerConnected(ent))
-			? ent->client->pers.netname
-			: "console", (*reason) ? reason : "not specified", globalID);
 }
 void G_globalPrintMsgForPlayer(gentity_t *ent, gentity_t *vic, globalType_t type, int globalID, char *reason)
 {

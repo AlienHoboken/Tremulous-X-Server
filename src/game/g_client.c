@@ -1143,15 +1143,11 @@ void ClientUserinfoChanged( int clientNum )
       G_DecolorString( decoloured, decoloured );
           G_LogPrintfColoured( "ClientRename: %i [%s] (%s) \"%s^7\" -> \"%s^7\"%s\n", clientNum,
              client->pers.ip, client->pers.guid, oldname, client->pers.netname, decoloured );
-          G_WebLogPrintf( "\"%s^7\" -> \"%s^7\"%s^7\n",
-             oldname, client->pers.netname, decoloured );
     }
     else
     {
           G_LogPrintf( "ClientRename: %i [%s] (%s) \"%s^7\" -> \"%s^7\"%s\n", clientNum,
              client->pers.ip, client->pers.guid, oldname, client->pers.netname, decoloured );
-          G_WebLogPrintf( "\"%s^7\" -> \"%s^7\"%s^7\n",
-             oldname, client->pers.netname, decoloured );
     }
 
       }
@@ -1159,8 +1155,6 @@ void ClientUserinfoChanged( int clientNum )
       {
       G_LogPrintf( "ClientRename: %i [%s] (%s) \"%s^7\" -> \"%s^7\"\n", clientNum,
          client->pers.ip, client->pers.guid, oldname, client->pers.netname );
-      G_WebLogPrintf( "\"%s^7\" -> \"%s^7\"\n",
-         oldname, client->pers.netname );
       }
       G_admin_namelog_update( client, qfalse );
     }
@@ -1389,20 +1383,17 @@ char *ClientConnect( int clientNum, qboolean firstTime )
      G_DecolorString( decoloured, decoloured );
      G_LogPrintfColoured( "ClientConnect: %i [%s] (%s) \"%s^7\"%s\n", clientNum,
         client->pers.ip, client->pers.guid, client->pers.netname, decoloured );
-     G_WebLogPrintf( "%s^7%s^7 connected\n", client->pers.netname, decoloured );
    }
    else
    {
       G_LogPrintf( "ClientConnect: %i [%s] (%s) \"%s^7\"%s\n", clientNum,
           client->pers.ip, client->pers.guid, client->pers.netname, decoloured );
-      G_WebLogPrintf( "%s^7%s ^7connected\n", client->pers.netname, decoloured );
    }
   }
   else
   {
     G_LogPrintf( "ClientConnect: %i [%s] (%s) \"%s^7\"\n", clientNum,
       client->pers.ip, client->pers.guid, client->pers.netname );
-    G_WebLogPrintf( "%s^7 connected\n", client->pers.netname );
   }
   
   if( client->pers.adminLevel )
@@ -1913,7 +1904,6 @@ void ClientDisconnect( int clientNum )
 
   G_LogPrintf( "ClientDisconnect: %i [%s] (%s) \"%s\"\n", clientNum,
    ent->client->pers.ip, ent->client->pers.guid, ent->client->pers.netname );
-  G_WebLogPrintf( "%s ^7disconnected\n", ent->client->pers.netname );
 
   trap_UnlinkEntity( ent );
   ent->s.modelindex = 0;

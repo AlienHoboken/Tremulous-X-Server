@@ -1724,7 +1724,6 @@ qboolean G_admin_ban_check( char *userinfo, char *reason, int rlen )
 							notice
 							);
 				G_LogPrintf("Banned player tried to connect from IP %s\n", ip);
-				G_WebLogPrintf("Banned player tried to connect from IP %s\n", ip);
 				return qtrue;
 			}
 		}
@@ -3466,7 +3465,6 @@ qboolean G_admin_muteall( gentity_t *ent, int skiparg )
 		G_AdminsPrintf( "^3!muteall: ^7 muteall has been used by %s\n",
 					   ( ent ) ? ent->client->pers.netname : "console" );
 		G_LogPrintf( "MUTEALL by %s\n", ( ent ) ? ent->client->pers.netname : "console");
-		G_WebLogPrintf( "MUTEALL by %s\n", ( ent ) ? ent->client->pers.netname : "console");
 	}
 	
 	if( !Q_stricmp( cmd, "unmuteall" ) )
@@ -3482,7 +3480,6 @@ qboolean G_admin_muteall( gentity_t *ent, int skiparg )
 		G_AdminsPrintf( "^3!unmuteall: ^7 unmuteall has been used by %s\n",
 					   ( ent ) ? ent->client->pers.netname : "console" );
 		G_LogPrintf( "UNMUTEALL by %s\n", ( ent ) ? ent->client->pers.netname : "console");
-		G_WebLogPrintf( "UNMUTEALL by %s\n", ( ent ) ? ent->client->pers.netname : "console");
 	}
 	return qtrue;
 }

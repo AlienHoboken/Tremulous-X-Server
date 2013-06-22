@@ -80,7 +80,6 @@ vmCvar_t  g_restarted;
 vmCvar_t  g_lockTeamsAtStart;
 vmCvar_t  g_logFile;
 vmCvar_t  g_logFileSync;
-vmCvar_t  g_webQueryFrames; //how many frames to run per one web query
 vmCvar_t  g_blood;
 vmCvar_t  g_podiumDist;
 vmCvar_t  g_podiumDrop;
@@ -273,7 +272,6 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_doWarmup, "g_doWarmup", "1", CVAR_ARCHIVE, 0, qtrue  },
   { &g_logFile, "g_logFile", "games.log", CVAR_ARCHIVE, 0, qfalse  },
   { &g_logFileSync, "g_logFileSync", "0", CVAR_ARCHIVE, 0, qfalse  },
-  { &g_webQueryFrames, "g_webQueryFrames", "3", CVAR_ARCHIVE, 0, qtrue },
   { &g_password, "g_password", "", CVAR_USERINFO, 0, qfalse  },
 
   { &g_banIPs, "g_banIPs", "", CVAR_ARCHIVE, 0, qfalse  },
@@ -718,33 +716,6 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
     else
       trap_FS_FOpenFile( g_logFile.string, &level.logFile, FS_APPEND );
 
-  level.webQueryTracker = 1; //reset the query tracker
-
-  //delete any lingering queries and reset query table auto increment
-  if (trap_mysql_runquery("DELETE FROM xQueries") == qtrue)
-  {
-    trap_mysql_finishquery();
-      if(trap_mysql_runquery("ALTER TABLE xQueries AUTO_INCREMENT=1") == qtrue) {
-	trap_mysql_finishquery();
-      } else {
-	level.webQueryTracker = 9999;//effectively disable queries if error
-      }
-  } else {
-//    trap_mysql_finishquery();
-    level.webQueryTracker = 9999;//effectively disable queries if error
-  }
-
-  //clear out the webconsolelog at start of each game
-  trap_FS_FOpenFile( "webConsoleLog.log", &level.webConsoleLog, FS_WRITE ); //open as write over
-  if( level.webConsoleLog )
-  {
-  	trap_FS_Write( "", strlen( "" ), level.webConsoleLog ); //write a blank to it
-        trap_FS_FCloseFile( level.webConsoleLog ); //close it
-  }
-
-  //now the real open
-  trap_FS_FOpenFile( "webConsoleLog.log", &level.webConsoleLog, FS_APPEND_SYNC ); //web console log herm
-
     if( !level.logFile )
       G_Printf( "WARNING: Couldn't open logfile: %s\n", g_logFile.string );
     else
@@ -908,11 +879,6 @@ void G_ShutdownGame( int restart )
     G_LogPrintf( "ShutdownGame:\n" );
     G_LogPrintf( "------------------------------------------------------------\n" );
     trap_FS_FCloseFile( level.logFile );
-  }
-
-  if( level.webConsoleLog )
-  {
-    trap_FS_FCloseFile( level.webConsoleLog );
   }
 
   // write all the client session data so we can get it back
@@ -1356,7 +1322,6 @@ void G_CalculateBuildPoints( void )
       {
         trap_SendServerCommand( -1, "cp \"Sudden Death!\"" );
         G_LogPrintf("Beginning Sudden Death (Mode %d)\n",g_suddenDeathMode.integer);
-	G_WebLogPrintf("Beginning Sudden Death\n");
         localHTP = 0;
         localATP = 0;
 
@@ -1934,7 +1899,6 @@ void QDECL G_AdminsPrintf( const char *fmt, ... )
   }
   
   G_LogPrintf("%s",string);
-  G_WebLogPrintf("%s",string);
 
 }
 
@@ -1983,39 +1947,6 @@ void QDECL G_LogPrintf( const char *fmt, ... )
   {
     trap_FS_Write( string, strlen( string ), level.logFile );
   }
-}
-
-/*
-=================
-G_WebLogPrintf
-
-Print to the web console logfile with a time stamp if it is open
-=================
-*/
-void QDECL G_WebLogPrintf( const char *fmt, ... )
-{
-  va_list argptr;
-  char    string[ 1024 ], decoloured[ 1024 ];
-  int     min, tens, sec;
-
-  sec = ( level.time - level.startTime ) / 1000;
-
-  min = sec / 60;
-  sec -= min * 60;
-  tens = sec / 10;
-  sec -= tens * 10;
-
-  Com_sprintf( string, sizeof( string ), "%3i:%i%i ", min, tens, sec );
-
-  va_start( argptr, fmt );
-  vsprintf( string +7 , fmt,argptr );
-  va_end( argptr );
-
-  if( !level.webConsoleLog )
-    return;
-
-  trap_FS_Write( string, strlen( string ), level.webConsoleLog );
-  
 }
 
 /*
@@ -2514,7 +2445,6 @@ void CheckVote( void )
       trap_SendServerCommand( -1, va("print \"Vote ^2PASSED^7 (%d - %d), ^2%d percent^7\n\"",
             level.voteYes, level.voteNo, voteYesPercent ) );
       G_LogPrintf( "Vote: Vote passed (%d-%d)\n", level.voteYes, level.voteNo );
-      G_WebLogPrintf( "Vote passed (%d-%d)\n", level.voteYes, level.voteNo );
       level.voteExecuteTime = level.time + 3000;
     }
     else
@@ -2523,7 +2453,6 @@ void CheckVote( void )
       trap_SendServerCommand( -1, va("print \"Vote ^1FAILED^7 (%d - %d), ^1%d percent^7\n\"",
       level.voteYes, level.voteNo, voteYesPercent ) );
       G_LogPrintf( "Vote: Vote failed (%d - %d)\n", level.voteYes, level.voteNo );
-      G_WebLogPrintf( "Vote failed (%d - %d)\n", level.voteYes, level.voteNo );
     }
   }
   else
@@ -2601,7 +2530,6 @@ void CheckTeamVote( int team )
     {
       trap_SendServerCommand( -1, va("print \"Team vote ^1FAILED^7  (%d - %d)\n\"", level.teamVoteYes[ cs_offset ], level.teamVoteNo[ cs_offset ] ) );
       G_LogPrintf( "Teamvote: Team vote failed (%d - %d)\n", level.teamVoteYes[ cs_offset ], level.teamVoteNo[ cs_offset ] );
-      G_WebLogPrintf( "Team vote failed (%d - %d)\n", level.teamVoteYes[ cs_offset ], level.teamVoteNo[ cs_offset ] );
     }
   }
   else
@@ -2611,7 +2539,6 @@ void CheckTeamVote( int team )
       // execute the command, then remove the vote
       trap_SendServerCommand( -1, va("print \"Team vote ^2PASSED^7  (%d - %d)\n\"", level.teamVoteYes[ cs_offset ], level.teamVoteNo[ cs_offset ] ) );
       G_LogPrintf( "Teamvote: Team vote passed (%d - %d)\n", level.teamVoteYes[ cs_offset ], level.teamVoteNo[ cs_offset ] );
-      G_WebLogPrintf( "Team vote passed (%d - %d)\n", level.teamVoteYes[ cs_offset ], level.teamVoteNo[ cs_offset ] );
       //
       trap_SendConsoleCommand( EXEC_APPEND, va( "%s\n", level.teamVoteString[ cs_offset ] ) );
     }
@@ -2620,7 +2547,6 @@ void CheckTeamVote( int team )
       // same behavior as a timeout
       trap_SendServerCommand( -1, va("print \"Team vote ^1FAILED^7  (%d - %d)\n\"", level.teamVoteYes[ cs_offset ], level.teamVoteNo[ cs_offset ] ) );
       G_LogPrintf( "Teamvote: Team vote failed (%d - %d)\n", level.teamVoteYes[ cs_offset ], level.teamVoteNo[ cs_offset ] );
-      G_WebLogPrintf( "Team vote failed (%d - %d)\n", level.teamVoteYes[ cs_offset ], level.teamVoteNo[ cs_offset ] );
     }
     else
     {

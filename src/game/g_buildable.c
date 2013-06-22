@@ -3650,9 +3650,6 @@ static gentity_t *G_Build( gentity_t *builder, buildable_t buildable, vec3_t ori
       built->s.modelindex,
       builder->client->pers.netname, 
       BG_FindNameForBuildable( built->s.modelindex ) );
-    G_WebLogPrintf("%s^7 is ^2building^7 %s\n",
-      builder->client->pers.netname, 
-      BG_FindNameForBuildable( built->s.modelindex ) );
   }
   }
 

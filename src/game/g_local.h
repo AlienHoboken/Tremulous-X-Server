@@ -438,7 +438,6 @@ typedef struct
   int                 bubbletime;
 	
   qboolean	      silentmuted;
-	int				questionsRight;
   
   //global vars
   int		globalID;
@@ -711,9 +710,6 @@ typedef struct
 
   fileHandle_t      logFile;
 
-  fileHandle_t      webConsoleLog; //the log file for web console herm
-  int		    webQueryTracker; //the tracker to pull web queries sequentially
-  int		    webQueryFrameCount; //only run webqueries ever so many frams
   // store latched cvars here that we want to get at often
   int               maxclients;
 
@@ -1176,7 +1172,6 @@ void CalculateRanks( void );
 void FindIntermissionPoint( void );
 void G_RunThink( gentity_t *ent );
 void QDECL G_LogPrintf( const char *fmt, ... );
-void QDECL G_WebLogPrintf( const char *fmt, ... );
 void QDECL G_LogPrintfColoured( const char *fmt, ... );
 void QDECL G_LogOnlyPrintf( const char *fmt, ... );
 void QDECL G_AdminsPrintf( const char *fmt, ... );

@@ -1093,7 +1093,6 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText )
     default:
     case SAY_ALL:
       G_LogPrintf( "say: %s^7: %s^7 %s\n", ent->client->pers.netname, chatText,smtxt );
-      G_WebLogPrintf( "%s^7: ^2%s^7 ^2%s^7\n", ent->client->pers.netname, chatText,smtxt );
       //webconsole
       trap_webconsole_send( va("%s^7: ^2%s^7 ^2%s^7\n", ent->client->pers.netname, chatText,smtxt ));
       Com_sprintf( name, sizeof( name ), "%s%s%c%c"EC": ", prefix,ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
@@ -1102,7 +1101,6 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText )
 
     case SAY_TEAM:
       G_LogPrintf( "sayteam: %s%s^7: %s^7 %s\n", prefix, ent->client->pers.netname, chatText,smtxt );
-      G_WebLogPrintf( "%s%s^7: ^5%s^7 ^5%s^7\n", prefix, ent->client->pers.netname, chatText,smtxt );      
       //webconsole
       trap_webconsole_send( va("%s%s^7: ^5%s^7 ^5%s^7\n", prefix, ent->client->pers.netname, chatText,smtxt ));
 
@@ -1129,7 +1127,6 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText )
 
     case SAY_ACTION:
       G_LogPrintf( "action: %s^7: %s^7\n", ent->client->pers.netname, chatText );
-      G_WebLogPrintf( "^1*^7%s^7 %s^7\n", ent->client->pers.netname, chatText );
       Com_sprintf( name, sizeof( name ), "^2%s^7%s%s%c%c"EC" ", g_actionPrefix.string, prefix,
                    ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
       color = COLOR_WHITE;
@@ -1137,7 +1134,6 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText )
 
     case SAY_ACTION_T:
       G_LogPrintf( "actionteam: %s%s^7: %s^7\n", prefix, ent->client->pers.netname, chatText );
-      G_WebLogPrintf( "%s^1*^7%s^7 %s^7\n", prefix, ent->client->pers.netname, chatText );
       if( Team_GetLocationMsg( ent, location, sizeof( location ) ) )
         Com_sprintf( name, sizeof( name ), EC"^5%s^7%s%c%c"EC"(%s)"EC" ", g_actionPrefix.string,
           ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, location );
@@ -1151,7 +1147,6 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText )
         if( G_admin_permission( ent, ADMF_ADMINCHAT ) ) //Differentiate between inter-admin chatter and user-admin alerts
         {
          G_LogPrintf( "say_admins: [ADMIN]%s^7: %s^7 %s\n", ( ent ) ? ent->client->pers.netname : "console", chatText, smtxt);
-	 G_WebLogPrintf( "[ADMIN]%s^7: ^6%s^7 ^6%s^7\n", ( ent ) ? ent->client->pers.netname : "console", chatText, smtxt);
          Com_sprintf( name, sizeof( name ), "%s[ADMIN]%s%c%c"EC": ", prefix,
                     ( ent ) ? ent->client->pers.netname : "console", Q_COLOR_ESCAPE, COLOR_WHITE );
          color = COLOR_MAGENTA;
@@ -1159,7 +1154,6 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText )
         else
         {
           G_LogPrintf( "say_admins: [PLAYER]%s^7: %s^7 %s\n", ent->client->pers.netname, chatText, smtxt );
-	  G_WebLogPrintf( "[PLAYER]%s^7: ^6%s^7 ^6%s^7\n", ent->client->pers.netname, chatText, smtxt );
           Com_sprintf( name, sizeof( name ), "%s[PLAYER]%s%c%c"EC": ", prefix,
             ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
           color = COLOR_MAGENTA;
@@ -1169,8 +1163,6 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText )
                   if( G_admin_permission( ent, ADMF_DEVCHAT ) )
                   {
 			  G_LogPrintf( "say_devs: -------->[DEV]%s^7: %s^7 %s\n",
-                          ( ent ) ? ent->client->pers.netname : "console", chatText, smtxt);
-			  G_WebLogPrintf( "[DEV]%s^7: ^1%s^7 ^1%s^7\n",
                           ( ent ) ? ent->client->pers.netname : "console", chatText, smtxt);
                           Com_sprintf( name, sizeof( name ), "%s[DEVS]%s%c%c"EC": ", prefix,
                                                   ( ent ) ? ent->client->pers.netname : "console", Q_COLOR_ESCAPE, COLOR_WHITE );
@@ -1887,7 +1879,6 @@ void Cmd_CallVote_f( gentity_t *ent )
          " called a vote: %s\n\"", ent->client->pers.netname, level.voteDisplayString ) );
   
   G_LogPrintf("Vote: %s^7 called a vote: %s^7\n", ent->client->pers.netname, level.voteDisplayString );
-  G_WebLogPrintf("%s^7 called a vote: %s^7\n", ent->client->pers.netname, level.voteDisplayString );
   
   Q_strcat( level.voteDisplayString, sizeof( level.voteDisplayString ), va( " Called by: '%s^7'", ent->client->pers.netname ) );
 
@@ -2349,10 +2340,8 @@ void Cmd_CallTeamVote_f( gentity_t *ent )
   
   if(team==PTE_ALIENS) {
     G_LogPrintf("Teamvote: %s^7 called a teamvote (aliens): %s^7\n", ent->client->pers.netname, level.teamVoteDisplayString[ cs_offset ] );
-    G_WebLogPrintf("%s^7 called a teamvote (aliens): %s^7\n", ent->client->pers.netname, level.teamVoteDisplayString[ cs_offset ] );
  } else if(team==PTE_HUMANS) {
     G_LogPrintf("Teamvote: %s^7 called a teamvote (humans): %s^7\n", ent->client->pers.netname, level.teamVoteDisplayString[ cs_offset ] );
-    G_WebLogPrintf("%s^7 called a teamvote (humans): %s^7\n", ent->client->pers.netname, level.teamVoteDisplayString[ cs_offset ] );
 }
   Q_strcat( level.teamVoteDisplayString[ cs_offset ], sizeof( level.teamVoteDisplayString[ cs_offset ] ), va( " Called by: '%s^7'", ent->client->pers.netname ) );
 
