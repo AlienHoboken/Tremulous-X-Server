@@ -8647,7 +8647,7 @@ qboolean G_admin_nobuild(gentity_t *ent, int skiparg )
 	
 	if( ent && ent->client->pers.teamSelection != PTE_NONE )
 	{
-		ADMP( "^3!bring: ^7you can only use this command from spectator\n" );
+		ADMP( "^3!nobuild: ^7you can only use this command from spectator\n" );
 		return qfalse;
 	}
 	
