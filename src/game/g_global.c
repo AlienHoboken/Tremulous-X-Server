@@ -143,7 +143,7 @@ void G_applyGlobal(gentity_t *ent, global_t *global)
 
 	ent->client->pers.globalID = global->id;
 
-	G_AdminsPrintf("^3%s:^7 have been caught by global %s id: %d \n",
+	G_AdminsPrintf("^3%s:^7 has been caught by global %s id: %d \n",
 		ent->client->pers.netname,
 		getGlobalTypeString(global->type),
 		global->id);
@@ -271,7 +271,7 @@ int G_globalAdd(gentity_t *adminEnt, gentity_t *victimEnt, char *guid, char *ip,
 			}
 			else
 			{
-				G_LogPrintf("Couldnt insert global to database\n");//va("Hacked client tried to connect guid: %s ip: %s\n", guid, ip) );
+				G_LogPrintf("Couldn't insert global to database\n");//va("Hacked client tried to connect guid: %s ip: %s\n", guid, ip) );
 				if (level.globals)
 				{
 					temp->id = level.globals->id + 1;
@@ -419,7 +419,7 @@ char *getGlobalTypeString(globalType_t type)
 			typeReason = "FORCESPEC";
 			break;
 		case GLOBAL_HANDICAP:
-			typeReason = "HANDYCAP";
+			typeReason = "HANDICAP";
 			break;
 		case GLOBAL_MUTE:
 			typeReason = "MUTE";

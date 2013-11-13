@@ -6430,7 +6430,7 @@ qboolean G_admin_bring( gentity_t *ent, int skiparg )
 	
 	if( G_SayArgc() < minargc )
 	{
-		ADMP( "^3!bring: ^7usage: !grab [name|slot#|clear]\n" );
+		ADMP( "^3!bring: ^7usage: !bring [name|slot#]\n" );
 		return qfalse;
 	}
 	
@@ -6465,7 +6465,7 @@ qboolean G_admin_bubble( gentity_t *ent, int skiparg )
 	
 	if( G_SayArgc() < 2 + skiparg )
 	{
-		ADMP( "^3!bubble: ^7usage: !lockname [name|slot#]\n" );
+		ADMP( "^3!bubble: ^7usage: !bubble [name|slot#]\n" );
 		return qfalse;
 	}
 	G_SayArgv( 1 + skiparg, name, sizeof( name ) );
@@ -8647,7 +8647,7 @@ qboolean G_admin_nobuild(gentity_t *ent, int skiparg )
 	
 	if( ent && ent->client->pers.teamSelection != PTE_NONE )
 	{
-		ADMP( "^3!bring: ^7you can only use this command from spectator\n" );
+		ADMP( "^3!nobuild: ^7you can only use this command from spectator\n" );
 		return qfalse;
 	}
 	
