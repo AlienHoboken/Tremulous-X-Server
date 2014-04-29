@@ -153,7 +153,7 @@ g_admin_cmd_t g_admin_cmds[ ] =
 		"[^3name|slot#^7]"
     },
     
-    {"devmap", G_admin_devmap, "S",
+    {"devmap", G_admin_devmap, "L",
 		"load a map with cheats (and optionally force layout)",
 		"[^3mapname^7] (^5layout^7)"
     },
@@ -275,7 +275,7 @@ g_admin_cmd_t g_admin_cmds[ ] =
 		"(^5command^7)"
     },
 	
-    {"info", G_admin_info, "H",
+    {"info", G_admin_info, "h",
 		"display the contents of server info files",
 		"(^5subject^7)"
     },
